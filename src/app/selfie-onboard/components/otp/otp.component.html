@@ -1,0 +1,56 @@
+<div class="selfie-onboard-container">
+    <app-loading-overlay></app-loading-overlay>
+    <app-notification-stack></app-notification-stack>
+    <div class="card-container">
+        <div class="logo-container">
+            <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
+        </div>
+
+        <section class="screen-card otp-screen">
+            <div class="marketing-content">
+                <p class="marketing-tagline">Create with passion. Share with joy. ✨</p>
+                <p class="marketing-subtext">Join our community and preserve your precious moments</p>
+            </div>
+            <div class="hero-intro">
+                <p class="eyebrow">Verify email</p>
+                <h1 class="title custom-title">Enter security code</h1>
+                <p class="subtitle">We sent a 6-digit OTP to {{ userEmail }}.</p>
+            </div>
+
+            <div class="otp-card">
+                <div class="otp-inputs">
+                    <input
+                        #otpBox
+                        *ngFor="let d of otpDigits; let i = index; trackBy: trackByFn"
+                        class="otp-box"
+                        maxlength="1"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
+                        [value]="otpDigits[i]"
+                        (input)="onOtpInput($event, i)"
+                        (keydown)="onOtpKeyDown($event, i)"
+                        (paste)="onOtpPaste($event)"
+                        [attr.aria-label]="'OTP digit ' + (i + 1)"
+                    />
+                </div>
+
+                <button class="btn primary full" type="button" (click)="verifyOtp()" [disabled]="isOtpVerifying || otpValue.length !== 6">
+                    {{ isOtpVerifying ? 'Verifying...' : 'Verify OTP' }}
+                </button>
+
+                <button class="btn ghost full" type="button" (click)="resendOtp()" [disabled]="!canResendOtp">
+                    Resend OTP
+                    <span *ngIf="!canResendOtp"> ({{ resendCountdown }}s)</span>
+                </button>
+
+                <p class="helper-text muted">Need to edit your email? Go back and update your details.</p>
+
+                <button class="btn secondary full" type="button" (click)="backToRegister()">
+                    Edit details
+                </button>
+            </div>
+        </section>
+    </div>
+</div>
+

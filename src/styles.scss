@@ -1,0 +1,142 @@
+/* You can add global styles to this file, and also import other style files */
+@use './tailwind.css';
+@use './assets/layout/layout.scss';
+@use 'primeicons/primeicons.css';
+@use './assets/demo/demo.scss';
+@use './app/shared/styles/floating-labels.scss';
+@use './app/shared/styles/button-utilities.scss';
+
+/* Global Custom Styles */
+* {
+    box-sizing: border-box;
+}
+
+/* Apply custom background to all main containers */
+.layout-wrapper {
+    background: var(--surface-ground);
+}
+
+.layout-main-container {
+    background: var(--surface-ground);
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--custom-bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--custom-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--custom-primary-dark);
+}
+
+/* Global button styling */
+.btn-custom-primary {
+    background-color: var(--custom-primary);
+    color: var(--custom-text-light);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-custom-primary:hover {
+    background-color: var(--custom-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-custom-secondary {
+    background-color: var(--custom-secondary);
+    color: var(--custom-text-light);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-custom-secondary:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Card styling */
+.card-custom {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.card-custom:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Input styling */
+.input-custom {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    color: var(--text-color);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.input-custom:focus {
+    outline: none;
+    border-color: var(--custom-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Link styling */
+a {
+    color: var(--custom-primary);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--custom-primary-dark);
+}
+
+/* Selection styling */
+::selection {
+    background: var(--custom-primary);
+    color: var(--custom-text-light);
+}
+
+/* Focus styling for accessibility */
+*:focus {
+    outline: 2px solid var(--custom-primary);
+    outline-offset: 2px;
+}
+
+/* Loading spinner with custom colors */
+.spinner-custom {
+    border: 2px solid var(--custom-bg-tertiary);
+    border-top: 2px solid var(--custom-primary);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+

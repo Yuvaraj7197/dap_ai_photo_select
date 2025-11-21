@@ -1,0 +1,137 @@
+/* Theme Configuration - Easy Color Scheme Changes */
+/* To change the entire design, modify these variables: */
+
+:root {
+    /* ===== PRIMARY COLOR SCHEME ===== */
+    /* Change these to completely transform the design */
+
+    /* Option 1: Blue Theme (Current) */
+    --theme-primary: #6366f1;
+    --theme-primary-dark: #4f46e5;
+    --theme-primary-light: #818cf8;
+
+    /* Option 2: Purple Theme - Uncomment to use */
+    /* --theme-primary: #8b5cf6;
+    --theme-primary-dark: #7c3aed;
+    --theme-primary-light: #a78bfa; */
+
+    /* Option 3: Green Theme - Uncomment to use */
+    /* --theme-primary: #10b981;
+    --theme-primary-dark: #059669;
+    --theme-primary-light: #34d399; */
+
+    /* Option 4: Red Theme - Uncomment to use */
+    /* --theme-primary: #ef4444;
+    --theme-primary-dark: #dc2626;
+    --theme-primary-light: #f87171; */
+
+    /* Option 5: Orange Theme - Uncomment to use */
+    /* --theme-primary: #f97316;
+    --theme-primary-dark: #ea580c;
+    --theme-primary-light: #fb923c; */
+
+    /* Option 6: Teal Theme - Uncomment to use */
+    /* --theme-primary: #14b8a6;
+    --theme-primary-dark: #0d9488;
+    --theme-primary-light: #2dd4bf; */
+
+    /* ===== SECONDARY COLOR SCHEME ===== */
+    /* Complementary colors that work well with the primary */
+
+    /* Blue Theme Secondary */
+    --theme-secondary: #10b981;
+    --theme-secondary-dark: #059669;
+    --theme-secondary-light: #34d399;
+
+    /* Purple Theme Secondary - Uncomment for purple theme */
+    /* --theme-secondary: #f59e0b;
+    --theme-secondary-dark: #d97706;
+    --theme-secondary-light: #fbbf24; */
+
+    /* Green Theme Secondary - Uncomment for green theme */
+    /* --theme-secondary: #6366f1;
+    --theme-secondary-dark: #4f46e5;
+    --theme-secondary-light: #818cf8; */
+
+    /* ===== BACKGROUND SCHEMES ===== */
+
+    /* Light Theme Backgrounds */
+    --theme-bg-primary: #ffffff;
+    --theme-bg-secondary: #f8fafc;
+    --theme-bg-tertiary: #f1f5f9;
+    --theme-bg-card: #ffffff;
+
+    /* Dark Theme Backgrounds */
+    --theme-bg-dark: #1e293b;
+    --theme-bg-darker: #0f172a;
+    --theme-bg-dark-card: #1e293b;
+
+    /* ===== TEXT COLORS ===== */
+
+    /* Light Theme Text */
+    --theme-text-primary: #1e293b;
+    --theme-text-secondary: #64748b;
+    --theme-text-muted: #94a3b8;
+    --theme-text-light: #ffffff;
+
+    /* Dark Theme Text */
+    --theme-text-dark-primary: #f8fafc;
+    --theme-text-dark-secondary: #cbd5e1;
+    --theme-text-dark-muted: #64748b;
+
+    /* ===== BORDER COLORS ===== */
+    --theme-border-light: #e2e8f0;
+    --theme-border-medium: #cbd5e1;
+    --theme-border-dark: #475569;
+
+    /* ===== ACCENT COLORS ===== */
+    --theme-success: #22c55e;
+    --theme-warning: #f97316;
+    --theme-danger: #ef4444;
+    --theme-info: #06b6d4;
+    --theme-accent: #f59e0b;
+}
+
+/* Apply the theme variables to the custom variables */
+:root {
+    --custom-primary: var(--theme-primary);
+    --custom-primary-dark: var(--theme-primary-dark);
+    --custom-primary-light: var(--theme-primary-light);
+    --custom-secondary: var(--theme-secondary);
+    --custom-secondary-dark: var(--theme-secondary-dark);
+    --custom-secondary-light: var(--theme-secondary-light);
+    --custom-accent: var(--theme-accent);
+    --custom-success: var(--theme-success);
+    --custom-warning: var(--theme-warning);
+    --custom-danger: var(--theme-danger);
+    --custom-info: var(--theme-info);
+
+    --custom-bg-primary: var(--theme-bg-primary);
+    --custom-bg-secondary: var(--theme-bg-secondary);
+    --custom-bg-tertiary: var(--theme-bg-tertiary);
+    --custom-bg-dark: var(--theme-bg-dark);
+    --custom-bg-darker: var(--theme-bg-darker);
+
+    --custom-text-primary: var(--theme-text-primary);
+    --custom-text-secondary: var(--theme-text-secondary);
+    --custom-text-muted: var(--theme-text-muted);
+    --custom-text-light: var(--theme-text-light);
+
+    --custom-border-light: var(--theme-border-light);
+    --custom-border-medium: var(--theme-border-medium);
+    --custom-border-dark: var(--theme-border-dark);
+}
+
+/* Dark theme overrides */
+:root[class*='app-dark'] {
+    --custom-bg-primary: var(--theme-bg-dark);
+    --custom-bg-secondary: var(--theme-bg-darker);
+    --custom-bg-tertiary: #334155;
+
+    --custom-text-primary: var(--theme-text-dark-primary);
+    --custom-text-secondary: var(--theme-text-dark-secondary);
+    --custom-text-muted: var(--theme-text-dark-muted);
+
+    --custom-border-light: var(--theme-border-dark);
+    --custom-border-medium: #475569;
+}

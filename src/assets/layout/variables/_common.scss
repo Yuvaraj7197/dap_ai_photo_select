@@ -1,0 +1,50 @@
+:root {
+    /* Custom Color Palette */
+    --custom-primary: #6366f1; /* Indigo */
+    --custom-primary-dark: #4f46e5;
+    --custom-primary-light: #818cf8;
+    --custom-secondary: #10b981; /* Emerald */
+    --custom-accent: #f59e0b; /* Amber */
+    --custom-success: #22c55e; /* Green */
+    --custom-warning: #f97316; /* Orange */
+    --custom-danger: #ef4444; /* Red */
+    --custom-info: #06b6d4; /* Cyan */
+
+    /* Background Colors */
+    --custom-bg-primary: #ffffff;
+    --custom-bg-secondary: #f8fafc;
+    --custom-bg-tertiary: #f1f5f9;
+    --custom-bg-dark: #1e293b;
+    --custom-bg-darker: #0f172a;
+
+    /* Text Colors */
+    --custom-text-primary: #1e293b;
+    --custom-text-secondary: #64748b;
+    --custom-text-muted: #94a3b8;
+    --custom-text-light: #ffffff;
+
+    /* Border Colors */
+    --custom-border-light: #e2e8f0;
+    --custom-border-medium: #cbd5e1;
+    --custom-border-dark: #475569;
+
+    /* Override PrimeNG Variables */
+    --primary-color: var(--custom-primary);
+    --primary-contrast-color: var(--custom-text-light);
+    --text-color: var(--custom-text-primary);
+    --text-color-secondary: var(--custom-text-secondary);
+    --surface-border: var(--custom-border-light);
+    --surface-card: var(--custom-bg-primary);
+    --surface-hover: var(--custom-bg-secondary);
+    --surface-overlay: var(--custom-bg-primary);
+    --transition-duration: var(--p-transition-duration);
+    --maskbg: rgba(0, 0, 0, 0.4);
+    --content-border-radius: var(--p-content-border-radius);
+    --layout-section-transition-duration: 0.2s;
+    --element-transition-duration: var(--p-transition-duration);
+    --focus-ring-width: var(--p-focus-ring-width);
+    --focus-ring-style: var(--p-focus-ring-style);
+    --focus-ring-color: var(--custom-primary);
+    --focus-ring-offset: var(--p-focus-ring-offset);
+    --focus-ring-shadow: var(--p-focus-ring-shadow);
+}

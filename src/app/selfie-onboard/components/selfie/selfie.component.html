@@ -1,0 +1,59 @@
+<div class="selfie-onboard-container">
+    <app-loading-overlay></app-loading-overlay>
+    <app-notification-stack></app-notification-stack>
+    <div class="card-container">
+        <div class="logo-container">
+            <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
+        </div>
+        <button class="logout-btn" type="button" (click)="backToLogin()">
+            <span class="icon">↺</span>
+            Logout
+        </button>
+
+        <section class="screen-card selfie-screen">
+            <div class="hero-intro">
+                <p class="eyebrow">Step 3</p>
+                <h1 class="title">Capture your photo</h1>
+            </div>
+
+            <div class="capture-area">
+                <div class="video-wrap">
+                    <video #videoElement autoplay muted playsinline class="video" [hidden]="previewImage"></video>
+                    <img *ngIf="previewImage" [src]="previewImage" alt="Captured selfie" class="preview-image" />
+                    <div *ngIf="!previewImage" class="oval" [ngClass]="{'aligned': isFaceAligned}"></div>
+                    <div class="capture-status" [ngClass]="{'ok': isFaceAligned}">
+                        <span class="status-icon" [ngClass]="isFaceAligned ? 'check' : 'info'"></span>
+                        <span *ngIf="isFaceAligned">Perfect alignment — tap capture!</span>
+                        <span *ngIf="!isFaceAligned">Move a little closer to centre your face</span>
+                    </div>
+                </div>
+
+                <canvas #canvasElement style="display:none;"></canvas>
+
+                <div class="actions selfie-actions" *ngIf="!previewImage">
+                    <button class="btn primary" type="button" (click)="capture()" [disabled]="!videoReady">
+                        <span class="icon">📷</span>
+                        Capture
+                    </button>
+                </div>
+
+                <div class="actions selfie-actions" *ngIf="previewImage">
+                    <button class="btn outline" type="button" (click)="retake()">
+                        <span class="icon">🔄</span>
+                        Retake
+                    </button>
+                </div>
+
+                <div class="actions two submit-row">
+                    <button class="btn secondary" type="button" (click)="backToLogin()">
+                        Back
+                    </button>
+                    <button class="btn primary" type="button" (click)="submit()" [disabled]="!previewImage">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+

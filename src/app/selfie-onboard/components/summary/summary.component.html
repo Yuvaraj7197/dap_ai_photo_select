@@ -1,0 +1,47 @@
+<div class="selfie-onboard-container">
+    <app-loading-overlay></app-loading-overlay>
+    <app-notification-stack></app-notification-stack>
+    <div class="card-container">
+        <div class="logo-container">
+            <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
+        </div>
+        <button class="logout-btn" type="button" (click)="viewAllSubmissions()">
+            <span class="icon">↺</span>
+            Logout
+        </button>
+
+        <section class="screen-card success-card">
+            <div class="success-illustration">
+                <span class="check-icon">✓</span>
+            </div>
+
+            <h1 class="title">Selfie Verified.</h1>
+
+            <div class="summary-grid">
+                <p><strong>Event</strong><span>{{ eventData.eventName }}</span></p>
+                <p><strong>Location</strong><span>{{ eventData.location }}</span></p>
+                <p><strong>Name</strong><span>{{ userData.name }}</span></p>
+                <p><strong>Email</strong><span>{{ userData.email }}</span></p>
+                <p><strong>Phone</strong><span>{{ userData.phone }}</span></p>
+            </div>
+
+            <div class="selfie-preview" *ngIf="previewImage">
+                <img [src]="previewImage" alt="Your selfie" />
+            </div>
+
+            <div class="actions vertical">
+                <button class="btn primary" type="button" (click)="viewAllSubmissions()">
+                    View all submissions
+                </button>
+                <button class="btn outline" type="button" (click)="retakeSelfie()">
+                    Retake selfie
+                </button>
+            </div>
+
+            <div class="marketing-footer">
+                <p class="marketing-footer-text">Powered by <strong>AlbumFlux</strong> — Your memories, beautifully preserved</p>
+            </div>
+        </section>
+    </div>
+</div>
+

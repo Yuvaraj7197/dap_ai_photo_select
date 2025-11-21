@@ -1,0 +1,17 @@
+:root {
+    --surface-ground: var(--custom-bg-secondary);
+    --code-background: var(--custom-bg-darker);
+    --code-color: var(--custom-bg-tertiary);
+
+    /* Additional Light Theme Overrides */
+    --surface-section: var(--custom-bg-primary);
+    --surface-card: var(--custom-bg-primary);
+    --surface-overlay: var(--custom-bg-primary);
+    --surface-border: var(--custom-border-light);
+    --surface-hover: var(--custom-bg-tertiary);
+
+    /* Text colors for light theme */
+    --text-color: var(--custom-text-primary);
+    --text-color-secondary: var(--custom-text-secondary);
+    --text-muted-color: var(--custom-text-muted);
+}

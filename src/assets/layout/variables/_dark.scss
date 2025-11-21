@@ -1,0 +1,29 @@
+:root[class*='app-dark'] {
+    --surface-ground: var(--custom-bg-darker);
+    --code-background: var(--custom-bg-dark);
+    --code-color: var(--custom-bg-tertiary);
+
+    /* Additional Dark Theme Overrides */
+    --surface-section: var(--custom-bg-dark);
+    --surface-card: var(--custom-bg-dark);
+    --surface-overlay: var(--custom-bg-dark);
+    --surface-border: var(--custom-border-dark);
+    --surface-hover: var(--custom-bg-darker);
+
+    /* Text colors for dark theme */
+    --text-color: var(--custom-text-light);
+    --text-color-secondary: var(--custom-text-muted);
+    --text-muted-color: var(--custom-text-secondary);
+
+    /* Override custom colors for dark theme */
+    --custom-bg-primary: var(--custom-bg-dark);
+    --custom-bg-secondary: var(--custom-bg-darker);
+    --custom-bg-tertiary: #334155;
+
+    --custom-text-primary: var(--custom-text-light);
+    --custom-text-secondary: var(--custom-text-muted);
+    --custom-text-muted: #64748b;
+
+    --custom-border-light: var(--custom-border-dark);
+    --custom-border-medium: #475569;
+}
