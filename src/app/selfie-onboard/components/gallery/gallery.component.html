@@ -2,10 +2,14 @@
     <app-loading-overlay></app-loading-overlay>
     <app-notification-stack></app-notification-stack>
     <!-- Logout Button - Top Right -->
-    <span *ngIf="!isFullScreenView || (galleryImages.length === 0)">
+    <span *ngIf="!isFullScreenView || (galleryImages.length === 0) ">
         <button class="gallery-logout-btn" type="button" (click)="logout()">
-            <span class="icon">↺</span>
-            Logout
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Logout</span>
         </button>
     </span>
 
@@ -37,12 +41,28 @@
     <div *ngIf="!(loadingService.isLoading$ | async) && galleryImages.length > 0 && !isFullScreenView" class="grid-gallery" (click)="showSmartViewMenu = false; showSmartSelectMenu = false">
         <!-- Header -->
         <div class="gallery-header">
-            <button class="select-button" (click)="toggleSelectionMode()">
-                {{ isSelectionMode ? 'Cancel' : 'Share' }}
+            <button class="select-button" (click)="toggleSelectionMode()" [class.cancel-mode]="isSelectionMode">
+                <svg *ngIf="!isSelectionMode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                <svg *ngIf="isSelectionMode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <span>{{ isSelectionMode ? 'Cancel' : 'Share' }}</span>
             </button>
             <div class="header-title">
                 <h2>AlbumFlux</h2>
                 <span class="image-count">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
+            </div>
+            <div class="header-actions">
+                <h2></h2>
+
+
             </div>
         </div>
 
