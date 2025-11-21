@@ -254,12 +254,14 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     showRegisterForm() {
-        this.router.navigate(['/event/selfie-onboarding/register']);
+         this.isRegisterMode = false;
     }
 
     showLoginForm() {
         this.isRegisterMode = true;
 
     }
+
+
 }
 
