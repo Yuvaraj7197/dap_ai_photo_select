@@ -144,14 +144,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadingService.showLoading('Signing in with Google...');
         this.http.post(`${this.apiUrl}api/auth/google/token/ai`, { token: response.credential }).subscribe({
             next: (res: any) => {
-                this.onboardService.setUserData({
-                    userId: res.user_id.toString(),
-                    accessToken: res.access,
-                    refreshToken: res.refresh,
-                    phone: res.phone,
-                    name: res.full_name,
-                    email: res.email
-                });
+                localStorage.setItem('ai_admin_auth',res);
                  localStorage.setItem('ai_user_id', res.user_id.toString());
                 localStorage.setItem('ai_access', res.access);
                 localStorage.setItem('ai_refresh', res.refresh);
@@ -195,14 +188,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadingService.showLoading('Signing in...');
         this.http.post(`${this.apiUrl}api/ai/login`, formData).subscribe({
             next: (res: any) => {
-                this.onboardService.setUserData({
-                    userId: res.user_id.toString(),
-                    accessToken: res.access,
-                    refreshToken: res.refresh,
-                    phone: res.phone,
-                    name: res.full_name,
-                    email: res.email
-                });
+               localStorage.setItem('ai_admin_auth',res);
 
                  localStorage.setItem('ai_user_id', res.user_id.toString());
                 localStorage.setItem('ai_access', res.access);
@@ -245,11 +231,9 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadingService.showLoading('Creating your account...');
         this.http.post(`${this.apiUrl}api/ai/register`, formData).subscribe({
             next: (res: any) => {
-                this.onboardService.setUserData({
-                    userId: res.user_id.toString(),
-                    accessToken: res.access,
-                    refreshToken: res.refresh
-                });
+                localStorage.setItem('ai_admin_auth',res);
+
+                localStorage.setItem('ai_admin_auth',res);
                  localStorage.setItem('ai_user_id', res.user_id.toString());
                 localStorage.setItem('ai_access', res.access);
                 localStorage.setItem('ai_refresh', res.refresh);
