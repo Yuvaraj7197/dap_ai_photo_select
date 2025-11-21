@@ -48,11 +48,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadEventData();
 
         // Check route to determine if we should show register mode
-        this.updateRegisterMode();
+        this.updateRegisterMode('register');
 
         // Subscribe to route changes
         this.routeSubscription = this.route.url.subscribe(() => {
-            this.updateRegisterMode();
+            this.updateRegisterMode('register');
         });
 
         this.eventDataSubscription = this.onboardService.eventData$.subscribe(data => {
@@ -62,9 +62,9 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    private updateRegisterMode() {
+    private updateRegisterMode(data:any) {
         const currentRoute = this.route.snapshot.url.join('/');
-        this.isRegisterMode = currentRoute.includes('register');
+        this.isRegisterMode = currentRoute.includes(data);
         // Re-initialize Google Sign-In when mode changes
         setTimeout(() => this.initializeGoogleSignIn(), 100);
     }
@@ -255,10 +255,12 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showRegisterForm() {
          this.isRegisterMode = false;
+         this.updateRegisterMode('register');
     }
 
     showLoginForm() {
         this.isRegisterMode = true;
+        this.updateRegisterMode('signup');
 
     }
 
