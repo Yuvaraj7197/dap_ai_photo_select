@@ -19,7 +19,6 @@
                 <div class="hero-intro">
                     <h1 class="title custom-title">Register</h1>
                 </div>
-                <div class="form-grid two-col">
                     <div class="floating-input" [class.invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
                         <input formControlName="name" placeholder=" " autocomplete="name" />
                         <label>Full name *</label>
@@ -34,7 +33,7 @@
                             Please enter a valid 10-digit phone number
                         </span>
                     </div>
-                </div>
+
                 <div class="floating-input" [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
                     <input type="email" formControlName="email" placeholder=" " autocomplete="email" />
                     <label>Email address *</label>
@@ -140,6 +139,7 @@
                 <div class="google-signup-wrapper">
                     <div id="google-signup-btn"></div>
                 </div>
+                  <p class="helper-text muted">Don't have an account? <a (click)="showLoginForm()">Sign up</a></p>
             </form>
         </section>
     </div>
