@@ -50,12 +50,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-         this.user_details = this.onboardService.getUserData();
-         console.log('User Details:', this.user_details);
-         if( this.user_details){
 
-
-         }
          this.getUserPhotos();
 
     }

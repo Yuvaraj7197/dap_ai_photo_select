@@ -26,10 +26,7 @@ export class SummaryComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        if (!this.onboardService.isAuthenticated()) {
-            this.router.navigate(['/event/selfie-onboarding/login']);
-            return;
-        }
+
 
         this.eventData = this.onboardService.getEventData() || { eventName: '', location: '' };
         this.userData = this.onboardService.getUserData() || {};
