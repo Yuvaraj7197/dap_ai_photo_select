@@ -20,6 +20,8 @@ export class SummaryComponent implements OnInit {
     submissionData: any = null;
     username:any
     email:any
+    location:any;
+    eventname:any;
 
     constructor(
         private router: Router,
@@ -28,8 +30,11 @@ export class SummaryComponent implements OnInit {
 
     ngOnInit(): void {
         this.username =  localStorage.getItem('ai_name');
-        this.email = localStorage.getItem('email') || '';
+        this.email = localStorage.getItem('ai_email') || '';
         ;
+
+        this.eventname = localStorage.getItem('event_name');
+        this.location = localStorage.getItem('location');
 
 
         this.eventData = this.onboardService.getEventData() || { eventName: '', location: '' };

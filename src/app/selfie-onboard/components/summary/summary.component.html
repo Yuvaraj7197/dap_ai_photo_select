@@ -15,10 +15,10 @@
             <h1 class="title">Selfie Verified.</h1>
 
             <div class="summary-grid">
-                <p><strong>Event</strong><span>{{ eventData.eventName }}</span></p>
-                <p><strong>Location</strong><span>{{ eventData.location }}</span></p>
-                <p><strong>Name</strong><span>{{ username }}</span></p>
-                <p><strong>Email</strong><span>{{ email }}</span></p>
+                <p><strong>Event</strong><span>{{ eventData.eventName || eventname }}</span></p>
+                <p><strong>Location</strong><span>{{ eventData.location || location }}</span></p>
+                <p><strong>Name</strong><span>{{ username ||  userData.name }}</span></p>
+                <p><strong>Email</strong><span>{{ email ||  userData.email }}</span></p>
             </div>
 
             <div class="selfie-preview" *ngIf="previewImage">
