@@ -37,12 +37,14 @@ export class EventWrapperComponent implements OnInit {
         this.route.queryParams.subscribe(params => {
             this.randomId = params['r'] || null;
 
+            localStorage.setItem('random_id', this.randomId || '');
+
             this.getEventDetails();
         });
     }
 
     getEventDetails() {
-        const randomId = this.randomId;
+        const randomId = this.randomId || localStorage.getItem('random_id');
         if (!randomId) {
             this.notificationService.notify('error', 'Invalid Event', 'Event ID is required');
             return;
