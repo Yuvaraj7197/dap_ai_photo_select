@@ -46,7 +46,7 @@ export class EventWrapperComponent implements OnInit {
     getEventDetails() {
         const randomId = this.randomId || localStorage.getItem('random_id');
         if (!randomId) {
-            this.notificationService.notify('error', 'Invalid Event', 'Event ID is required');
+
             return;
         }
 
