@@ -18,14 +18,18 @@ export class SummaryComponent implements OnInit {
     userData: any = {};
     previewImage: string | null = null;
     submissionData: any = null;
+    username:any
+    email:any
 
     constructor(
         private router: Router,
         private onboardService: SelfieOnboardService,
-        private notificationService: NotificationService
     ) {}
 
     ngOnInit(): void {
+        this.username =  localStorage.getItem('ai_name');
+        this.email = localStorage.getItem('email') || '';
+        ;
 
 
         this.eventData = this.onboardService.getEventData() || { eventName: '', location: '' };
@@ -37,7 +41,11 @@ export class SummaryComponent implements OnInit {
         setTimeout(() => {
             this.viewAllSubmissions();
         }, 3000);
+
+
     }
+
+
 
     viewAllSubmissions() {
         this.router.navigate(['/event/selfie-onboarding/gallery']);

@@ -60,7 +60,7 @@ export class EventWrapperComponent implements OnInit {
 
                 localStorage.setItem('event_name', response.event_type_name);
                 localStorage.setItem('location', response.studio_city_name);
-                localStorage.setItem('event_id', response.studio_id.toString());
+                localStorage.setItem('studio_by_id', response.studio_id.toString());
 
                 this.loadingService.hideLoading();
 

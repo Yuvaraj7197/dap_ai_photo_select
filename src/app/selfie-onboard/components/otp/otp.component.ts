@@ -147,12 +147,14 @@ export class OtpComponent implements OnInit, OnDestroy {
         this.http.post(`${this.apiUrl}api/aiphoto/verify-otp`, payload).subscribe({
             next: (res: any) => {
                 this.isOtpVerifying = false;
-                this.onboardService.setUserData({
-                    ...this.onboardService.getUserData(),
-                    phone: res.phone,
-                    name: res.full_name,
-                    email: res.email
-                });
+                 localStorage.setItem('ai_admin_auth',res);
+
+                 localStorage.setItem('ai_user_id', res.user_id.toString());
+                localStorage.setItem('ai_access', res.access);
+                localStorage.setItem('ai_refresh', res.refresh);
+                localStorage.setItem('ai_phone', res.phone);
+                localStorage.setItem('ai_name', res.full_name);
+                localStorage.setItem('ai_email', res.email);
 
                 this.loadingService.hideLoading();
                 this.notificationService.notify('success', 'Verified', 'OTP verified successfully');
@@ -202,7 +204,7 @@ export class OtpComponent implements OnInit, OnDestroy {
     }
 
     backToRegister() {
-        this.router.navigate(['/event/selfie-onboarding/login']);
+        this.router.navigate(['/event/selfie-onboarding/signup']);
     }
 }
 

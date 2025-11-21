@@ -218,7 +218,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const event_id = localStorage.getItem('event_id') || '';
         const city_id = localStorage.getItem('studio_city_id') || '';
-        const studio_id = localStorage.getItem('studio_id') || '';
+        const studio_id = localStorage.getItem('studio_by_id') || '';
 
         const formData = {
             full_name: this.registerForm.get('name')?.value,
@@ -235,14 +235,12 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
             next: (res: any) => {
                 localStorage.setItem('ai_admin_auth',res);
 
-                localStorage.setItem('ai_admin_auth',res);
                  localStorage.setItem('ai_user_id', res.user_id.toString());
                 localStorage.setItem('ai_access', res.access);
                 localStorage.setItem('ai_refresh', res.refresh);
                 localStorage.setItem('ai_phone', res.phone);
                 localStorage.setItem('ai_name', res.full_name);
                 localStorage.setItem('ai_email', res.email);
-
                 this.loadingService.hideLoading();
                 this.notificationService.notify('success', 'Account ready', 'Registration successful! OTP sent to your email.');
                 this.router.navigate(['/event/selfie-onboarding/otp']);
