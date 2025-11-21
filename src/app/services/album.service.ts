@@ -17,7 +17,7 @@ export class AlbumService {
 
 getAIImageBlob(filename: string) {
   const url = `${this.api.image.GET_IMAGE_BY_NAMES}/${filename}`;
-  const token = localStorage.getItem('ai_access') || localStorage.getItem('admin_auth');
+  const token = localStorage.getItem('ai_access') || localStorage.getItem('ai_admin_auth');
 
   const headers = new HttpHeaders({
     Authorization: `Bearer ${token}`

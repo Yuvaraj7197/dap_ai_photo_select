@@ -18,7 +18,7 @@ export class AuthGuardService implements CanActivate {
       return true;
     }
 
-    const authData = localStorage.getItem('admin_auth');
+    const authData = localStorage.getItem('ai_admin_auth');
     const mfaVerified = localStorage.getItem('mfa_verified');
 
     if (authData || mfaVerified) return true;

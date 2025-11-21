@@ -27,7 +27,7 @@ export class RemoteService {
       headers = headers.set('Content-Type', 'application/json');
     }
 
-    const authData = localStorage.getItem('admin_auth');
+    const authData = localStorage.getItem('ai_admin_auth');
     let token: string | null = null;
 
     try {
@@ -115,7 +115,7 @@ export class RemoteService {
   }
 
   refreshToken(): Observable<string | null> {
-    const authData = localStorage.getItem('admin_auth') || '{}';
+    const authData = localStorage.getItem('ai_admin_auth') || '{}';
     const refreshToken = JSON.parse(authData)?.refresh || null;
 
     if (!refreshToken) {
@@ -130,8 +130,8 @@ export class RemoteService {
         if (newAccessToken) {
           const auth = JSON.parse(authData);
           auth.access = newAccessToken;
-          localStorage.setItem('admin_auth_obj', JSON.stringify(authData));
-          localStorage.setItem('admin_auth', JSON.stringify(auth));
+          localStorage.setItem('ai_admin_auth_obj', JSON.stringify(authData));
+          localStorage.setItem('ai_admin_auth', JSON.stringify(auth));
           return newAccessToken;
         }
         return null;
@@ -150,26 +150,16 @@ export class RemoteService {
       this.hasShownToast = true;
     }
 
-    localStorage.removeItem('admin_auth');
+    localStorage.removeItem('ai_admin_auth');
 
     setTimeout(() => {
       this.hasShownToast = false;
-      window.location.href = '/login';
+      window.location.href = 'event/selfie-onboarding/signup';
     }, 1500);
   }
 
 
-  getPdf(url: string): Observable<HttpResponse<Blob>> {
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-    const authData = localStorage.getItem('admin_auth');
-    const auth = authData ? JSON.parse(authData) : null;
-    const token = auth && auth.token ? `Token ${auth.token}` : '';
-
-    headers = headers.set('Authorization', token);
-
-    return this.http.get(url, { headers, responseType: 'blob', observe: 'response' });
-  }
 
   private showToast(message: string) {
     // this.messageService.add({ severity: 'error', summary: 'Error', detail: message });

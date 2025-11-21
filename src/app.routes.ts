@@ -41,7 +41,7 @@ export const appRoutes: Routes = [
         redirectTo: 'event/selfie-onboarding/signup',
         pathMatch: 'full'
     },
-    { path: '**', redirectTo: '/signup' }
+    { path: '**', redirectTo: 'event/selfie-onboarding/signup' }
 ];
 
 

@@ -13,7 +13,7 @@ export class AuthService {
   constructor(private http: HttpClient,private remote:RemoteService) {}
 
   logout() {
-    localStorage.removeItem('admin_auth');
+    localStorage.removeItem('ai_admin_auth');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('access');
   }

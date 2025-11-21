@@ -129,7 +129,7 @@ export class GlobalInterceptor implements HttpInterceptor {
   }
 
   private addAuthToken(request: HttpRequest<any>, token?: string | null): HttpRequest<any> {
-    const authData = localStorage.getItem('admin_auth');
+    const authData = localStorage.getItem('ai_admin_auth');
     const accessToken = token || (authData ? JSON.parse(authData)?.access : null);
 
     if (!accessToken) {
