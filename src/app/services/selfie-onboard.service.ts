@@ -140,7 +140,6 @@ export class SelfieOnboardService {
         localStorage.removeItem('ai_phone');
         localStorage.removeItem('ai_name');
         localStorage.removeItem('ai_email');
-        localStorage.removeItem('current_screen');
     }
 
     clearAll() {
@@ -148,6 +147,7 @@ export class SelfieOnboardService {
         this.eventDataSubject.next(null);
         localStorage.removeItem('event_id');
         localStorage.removeItem('studio_city_id');
+        localStorage.removeItem('studio_by_id');
     }
 
     isAuthenticated(): boolean {
