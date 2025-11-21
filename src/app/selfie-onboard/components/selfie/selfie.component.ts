@@ -265,9 +265,10 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
         formData.append('user_id', user_id);
         formData.append('image', imageFile, 'selfie.png');
 
-        const headers = new HttpHeaders({
+        let headers = new HttpHeaders({
             Authorization: `Bearer ${accessToken}`
         });
+        headers = headers.set('X-Ai-Origin', 'https://aiphoto.albumflux.com');
 
         this.loadingService.showLoading('Uploading selfie...');
         this.http.post(`${this.apiUrl}api/aiphoto/upload-selfie`, formData, { headers }).subscribe({

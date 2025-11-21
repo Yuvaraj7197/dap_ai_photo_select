@@ -300,9 +300,11 @@ export class GalleryComponent implements OnInit, OnDestroy {
     getUserPhotos() {
         const user_id = localStorage.getItem('ai_user_id');
         const accessToken = localStorage.getItem('ai_access');
-         const headers = new HttpHeaders({
+         let headers = new HttpHeaders({
             Authorization: `Bearer ${accessToken}`
         });
+
+        headers = headers.set('X-Ai-Origin', 'https://aiphoto.albumflux.com');
 
         if (!user_id) {
             this.notificationService.notify('error', 'Authentication Error', 'User ID not found. Please login again.');
