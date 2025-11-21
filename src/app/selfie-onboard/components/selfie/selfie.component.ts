@@ -300,6 +300,7 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     backToLogin() {
+        this.onboardService.clearUserData();
         this.stopCamera();
         this.router.navigate(['/event/selfie-onboarding/signup']);
     }

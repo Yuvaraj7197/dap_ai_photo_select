@@ -36,7 +36,7 @@ export class EventWrapperComponent implements OnInit {
     ngOnInit(): void {
         this.route.queryParams.subscribe(params => {
             this.randomId = params['r'] || null;
-            this.onboardService.clearAll();
+
             this.getEventDetails();
         });
     }
@@ -60,6 +60,7 @@ export class EventWrapperComponent implements OnInit {
 
                 localStorage.setItem('event_name', response.event_type_name);
                 localStorage.setItem('location', response.studio_city_name);
+                localStorage.setItem('event_id', response.studio_id.toString());
 
                 this.loadingService.hideLoading();
 

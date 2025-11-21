@@ -218,6 +218,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const event_id = localStorage.getItem('event_id') || '';
         const city_id = localStorage.getItem('studio_city_id') || '';
+        const studio_id = localStorage.getItem('studio_id') || '';
 
         const formData = {
             full_name: this.registerForm.get('name')?.value,
@@ -225,7 +226,8 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
             phone: this.registerForm.get('phone')?.value,
             password: this.registerForm.get('Password')?.value,
             location: city_id ? parseInt(city_id) : null,
-            eventType: event_id ? parseInt(event_id) : null
+            eventType: event_id ? parseInt(event_id) : null,
+            studio:studio_id? parseInt(studio_id):null
         };
 
         this.loadingService.showLoading('Creating your account...');

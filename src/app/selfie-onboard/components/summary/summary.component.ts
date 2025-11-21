@@ -36,7 +36,7 @@ export class SummaryComponent implements OnInit {
         // Auto-navigate to gallery after 5 seconds
         setTimeout(() => {
             this.viewAllSubmissions();
-        }, 5000);
+        }, 3000);
     }
 
     viewAllSubmissions() {
