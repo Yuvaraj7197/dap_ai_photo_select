@@ -84,8 +84,8 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private initializeForms() {
         this.LoginForm = this.fb.group({
-            email: ['vekash12112003@gmail.com', [Validators.required, Validators.email]],
-            Password: ['Album@2025', [Validators.required, Validators.minLength(6)]]
+            email: ['', [Validators.required, Validators.email]],
+            Password: ['', [Validators.required, Validators.minLength(6)]]
         });
 
         this.registerForm = this.fb.group({
