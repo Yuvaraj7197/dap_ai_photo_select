@@ -12,9 +12,7 @@
                 <h1 class="title custom-title">Welcome to</h1>
                 <p class="subtitle">{{ eventData.eventName || '—' }}, {{ eventData.location || '—' }}</p>
             </div>
-            <!-- <div class="marketing-content">
-                <p class="marketing-subtext">Join our community and preserve your precious moments. ✨</p>
-            </div> -->
+
             <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="form-section">
                 <div class="hero-intro">
                     <h1 class="title custom-title">Register</h1>
@@ -70,8 +68,8 @@
                         </span>
                         <span class="terms-checkbox-text">
                             By signing up you agree to our
-                            <a [routerLink]="['/terms-condition']" target="_blank" rel="noopener noreferrer" class="terms-link">Terms and Conditions</a>,
-                            <a [routerLink]="['/privacy']" target="_blank" rel="noopener noreferrer" class="terms-link">Privacy Policy</a>.
+                            <a href="https://studio.albumflux.com/#/terms-condition" target="_blank" rel="noopener noreferrer" class="terms-link">Terms and Conditions</a>,
+                            <a href="https://studio.albumflux.com/#/privacy" target="_blank" rel="noopener noreferrer" class="terms-link">Privacy Policy</a>.
                         </span>
                     </label>
                     <span class="input-hint" *ngIf="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
@@ -95,6 +93,9 @@
 
                 <p class="helper-text muted">Already have an account? <a (click)="showLoginForm()">Sign in</a></p>
             </form>
+             <div class="marketing-footer">
+                <p class="marketing-footer-text">Powered by <a href="https://www.albumflux.com" target="_blank"><strong>AlbumFlux</strong></a> — Your memories, beautifully preserved</p>
+            </div>
         </section>
 
         <!-- LOGIN SCREEN -->
@@ -141,7 +142,11 @@
                 </div>
                   <p class="helper-text muted">Don't have an account? <a (click)="showRegisterForm()">Sign up</a></p>
             </form>
+            <div class="marketing-footer">
+                <p class="marketing-footer-text">Powered by <a href="https://www.albumflux.com" target="_blank"><strong>AlbumFlux</strong></a> — Your memories, beautifully preserved</p>
+            </div>
         </section>
+
     </div>
 </div>
 

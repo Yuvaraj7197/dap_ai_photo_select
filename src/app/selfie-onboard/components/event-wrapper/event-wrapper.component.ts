@@ -74,7 +74,7 @@ export class EventWrapperComponent implements OnInit {
                         this.router.navigate(['/event/selfie-onboarding/otp'], { replaceUrl: true });
                     }
                 } else {
-                    this.router.navigate(['/event/selfie-onboarding/login'], { replaceUrl: true });
+                    this.router.navigate(['/event/selfie-onboarding/signup'], { replaceUrl: true });
                 }
             },
             error: (err) => {
