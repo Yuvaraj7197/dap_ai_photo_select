@@ -43,17 +43,6 @@ export class OtpComponent implements OnInit, OnDestroy {
         this.initializeForm();
         this.loadUserEmail();
         this.startResendTimer();
-
-        // Check if user is authenticated
-        if (!this.onboardService.isAuthenticated()) {
-            this.router.navigate(['/event/selfie-onboarding/login']);
-            return;
-        }
-
-        // Check if OTP is already verified
-        if (this.onboardService.hasCompleteProfile()) {
-            this.router.navigate(['/event/selfie-onboarding/selfie']);
-        }
     }
 
     ngOnDestroy(): void {
