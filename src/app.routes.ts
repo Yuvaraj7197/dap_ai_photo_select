@@ -10,10 +10,6 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('./app/selfie-onboard/components/login/login.component').then(m => m.LoginComponent)
             },
             {
-                path: 'signup',
-                loadComponent: () => import('./app/selfie-onboard/components/login/login.component').then(m => m.LoginComponent)
-            },
-            {
                 path: 'otp',
                 loadComponent: () => import('./app/selfie-onboard/components/otp/otp.component').then(m => m.OtpComponent)
             },
@@ -35,11 +31,6 @@ export const appRoutes: Routes = [
                 pathMatch: 'full'
             }
         ]
-    },
-    {
-        path: 'event/selfie-onboarding/signup',
-        redirectTo: 'event/selfie-onboarding/signup',
-        pathMatch: 'full'
     },
     { path: '**', redirectTo: 'event/selfie-onboarding/signup' }
 ];

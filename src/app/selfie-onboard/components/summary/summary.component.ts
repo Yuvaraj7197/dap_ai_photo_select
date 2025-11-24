@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SelfieOnboardService } from '../../../services/selfie-onboard.service';
-import { NotificationService } from '../../../services/notification.service';
 import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
 import { NotificationStackComponent } from '../shared/notification-stack.component';
 
@@ -17,37 +16,30 @@ export class SummaryComponent implements OnInit {
     eventData: any = { eventName: '', location: '' };
     userData: any = {};
     previewImage: string | null = null;
-    submissionData: any = null;
-    username:any
-    email:any
-    location:any;
-    eventname:any;
+    username: any;
+    email: any;
+    location: any;
+    eventname: any;
 
     constructor(
         private router: Router,
-        private onboardService: SelfieOnboardService,
+        private onboardService: SelfieOnboardService
     ) {}
 
     ngOnInit(): void {
-        this.username =  localStorage.getItem('ai_name');
+        this.username = localStorage.getItem('ai_name');
         this.email = localStorage.getItem('ai_email') || '';
-        ;
-
         this.eventname = localStorage.getItem('event_name');
         this.location = localStorage.getItem('location');
-
 
         this.eventData = this.onboardService.getEventData() || { eventName: '', location: '' };
         this.userData = this.onboardService.getUserData() || {};
         this.previewImage = this.onboardService.getPreviewImage();
-        this.submissionData = this.onboardService.getSubmissionData();
 
-        // Auto-navigate to gallery after 5 seconds
+        // Auto-navigate to gallery after 3 seconds
         setTimeout(() => {
             this.viewAllSubmissions();
         }, 3000);
-
-
     }
 
 

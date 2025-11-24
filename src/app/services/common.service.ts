@@ -1,6 +1,5 @@
-import { Injectable, Injector } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { environmentCommon } from '../../environments/environment.common';
 
 

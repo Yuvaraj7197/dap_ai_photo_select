@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -13,14 +12,13 @@ import { NotificationStackComponent } from '../shared/notification-stack.compone
 @Component({
     selector: 'app-otp',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, LoadingOverlayComponent, NotificationStackComponent],
+    imports: [CommonModule, RouterModule, LoadingOverlayComponent, NotificationStackComponent],
     templateUrl: './otp.component.html',
     styleUrl: './otp.component.scss'
 })
 export class OtpComponent implements OnInit, OnDestroy {
     @ViewChildren('otpBox') otpInputs!: QueryList<ElementRef>;
 
-    registerForm!: FormGroup;
     otpDigits: string[] = new Array(6).fill('');
     isOtpVerifying = false;
     canResendOtp = false;
@@ -30,17 +28,14 @@ export class OtpComponent implements OnInit, OnDestroy {
     private apiUrl = `${environment.baseURL}`;
 
     constructor(
-        private fb: FormBuilder,
         private http: HttpClient,
         private router: Router,
-        private cdr: ChangeDetectorRef,
         private onboardService: SelfieOnboardService,
         private notificationService: NotificationService,
         private loadingService: LoadingService
     ) {}
 
     ngOnInit(): void {
-        this.initializeForm();
         this.loadUserEmail();
         this.startResendTimer();
     }
@@ -49,16 +44,9 @@ export class OtpComponent implements OnInit, OnDestroy {
         if (this.resendTimer) clearInterval(this.resendTimer);
     }
 
-    private initializeForm() {
-        this.registerForm = this.fb.group({
-            email: ['']
-        });
-    }
-
     private loadUserEmail() {
         const userData = this.onboardService.getUserData();
         this.userEmail = userData?.email || '';
-        this.registerForm.patchValue({ email: this.userEmail });
     }
 
     trackByFn(index: number) {
