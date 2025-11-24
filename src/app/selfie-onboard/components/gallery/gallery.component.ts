@@ -38,6 +38,11 @@ export class GalleryComponent implements OnInit, OnDestroy {
     lastTap: number = 0;
     private apiUrl = `${environment.baseURL}`;
     user_details:any;
+    longPressTimer: any = null;
+    longPressDelay: number = 500; // 500ms for long press
+    isLongPressing: boolean = false;
+    touchStartTime: number = 0;
+    touchStartIndex: number = -1;
 
     constructor(
         private http: HttpClient,
@@ -130,6 +135,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
             this.selectedImages.clear();
             this.showSmartSelectMenu = false;
         }
+    }
+
+    exitSelectionMode() {
+        this.isSelectionMode = false;
+        this.selectedImages.clear();
+        this.showSmartSelectMenu = false;
     }
 
     toggleImageSelection(index: number) {
@@ -285,6 +296,118 @@ export class GalleryComponent implements OnInit, OnDestroy {
         this.showToast('Image downloaded');
     }
 
+    async downloadSelectedImages() {
+        if (this.selectedImages.size === 0) {
+            this.showToast('No images selected');
+            return;
+        }
+
+        try {
+            this.loadingService.showLoading(`Downloading ${this.selectedImages.size} image(s)...`);
+
+            const selectedIndices = Array.from(this.selectedImages).sort((a, b) => a - b);
+
+            for (let i = 0; i < selectedIndices.length; i++) {
+                const index = selectedIndices[i];
+                const image = this.galleryImages[index];
+                const imageUrl = image?.url || image?.image_url || image;
+
+                if (imageUrl) {
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+                    const fileType = blob.type || 'image/jpeg';
+                    const fileName = `selfie_${index + 1}.${fileType.split('/')[1] || 'jpg'}`;
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(link.href);
+
+                    // Small delay between downloads
+                    if (i < selectedIndices.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 200));
+                    }
+                }
+            }
+
+            this.showToast(`${selectedIndices.length} image(s) downloaded successfully`);
+        } catch (error: any) {
+            console.error('Error downloading images:', error);
+            this.showToast('Failed to download images');
+        } finally {
+            this.loadingService.hideLoading();
+        }
+    }
+
+    deleteSelectedImages() {
+        if (this.selectedIndices.length === 0) {
+            this.showToast('No images selected');
+            return;
+        }
+
+        const count = this.selectedImages.size;
+        const confirmMessage = `Are you sure you want to delete ${count} ${count === 1 ? 'image' : 'images'}?`;
+
+        if (confirm(confirmMessage)) {
+            try {
+                this.loadingService.showLoading(`Deleting ${count} image(s)...`);
+
+                // Sort indices in descending order to avoid index shifting issues
+                const sortedIndices = Array.from(this.selectedImages).sort((a, b) => b - a);
+
+                sortedIndices.forEach(index => {
+                    // Revoke blob URL to free memory
+                    const image = this.galleryImages[index];
+                    if (image?.url && image.url.startsWith('blob:')) {
+                        URL.revokeObjectURL(image.url);
+                    }
+                    // Remove from array
+                    this.galleryImages.splice(index, 1);
+                });
+
+                // Update selection indices after deletion
+                const newSelectedImages = new Set<number>();
+                this.selectedImages.forEach(oldIndex => {
+                    let newIndex = oldIndex;
+                    sortedIndices.forEach(deletedIndex => {
+                        if (oldIndex > deletedIndex) {
+                            newIndex--;
+                        }
+                    });
+                    if (newIndex >= 0 && newIndex < this.galleryImages.length) {
+                        newSelectedImages.add(newIndex);
+                    }
+                });
+
+                this.selectedImages = newSelectedImages;
+
+                // Regroup if needed
+                if (this.viewMode === 'grouped') {
+                    this.groupImagesByDate();
+                }
+
+                // Exit selection mode if no images left or all selected were deleted
+                if (this.galleryImages.length === 0 || this.selectedImages.size === 0) {
+                    this.exitSelectionMode();
+                }
+
+                this.showToast(`${count} image(s) deleted successfully`);
+            } catch (error: any) {
+                console.error('Error deleting images:', error);
+                this.showToast('Failed to delete images');
+            } finally {
+                this.loadingService.hideLoading();
+            }
+        }
+    }
+
+    get selectedIndices(): number[] {
+        return Array.from(this.selectedImages).sort((a, b) => a - b);
+    }
+
     showToast(message: string) {
         this.toastMessage = message;
         this.showActionToast = true;
@@ -404,13 +527,104 @@ export class GalleryComponent implements OnInit, OnDestroy {
         return parts.slice(parts.length - 2).join('/');
     }
 
-    openFullScreenView(index: number) {
+    onImageClick(index: number, event: Event) {
+        event.stopPropagation();
         if (this.isSelectionMode) {
             this.toggleImageSelection(index);
         } else {
-            this.currentImageIndex = index;
-            this.isFullScreenView = true;
+            this.openFullScreenView(index);
         }
+    }
+
+    onImageTouchStart(index: number, event: TouchEvent) {
+        event.stopPropagation();
+        this.touchStartTime = Date.now();
+        this.touchStartIndex = index;
+        this.isLongPressing = false;
+
+        this.longPressTimer = setTimeout(() => {
+            if (!this.isSelectionMode) {
+                this.isLongPressing = true;
+                this.isSelectionMode = true;
+                this.toggleImageSelection(index);
+                // Haptic feedback (if available)
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }
+        }, this.longPressDelay);
+    }
+
+    onImageTouchEnd(index: number, event: TouchEvent) {
+        event.stopPropagation();
+        const touchDuration = Date.now() - this.touchStartTime;
+
+        if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+        }
+
+        // If it was a quick tap and not a long press
+        if (touchDuration < this.longPressDelay && !this.isLongPressing) {
+            if (this.isSelectionMode) {
+                this.toggleImageSelection(index);
+            } else {
+                // Small delay to ensure long press didn't trigger
+                setTimeout(() => {
+                    if (!this.isLongPressing) {
+                        this.openFullScreenView(index);
+                    }
+                }, 50);
+            }
+        }
+
+        this.isLongPressing = false;
+        this.touchStartIndex = -1;
+    }
+
+    onImageMouseDown(index: number, event: MouseEvent) {
+        event.stopPropagation();
+        this.touchStartTime = Date.now();
+        this.touchStartIndex = index;
+        this.isLongPressing = false;
+
+        this.longPressTimer = setTimeout(() => {
+            if (!this.isSelectionMode) {
+                this.isLongPressing = true;
+                this.isSelectionMode = true;
+                this.toggleImageSelection(index);
+            }
+        }, this.longPressDelay);
+    }
+
+    onImageMouseUp(index: number, event: MouseEvent) {
+        event.stopPropagation();
+        const touchDuration = Date.now() - this.touchStartTime;
+
+        if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+        }
+
+        if (touchDuration < this.longPressDelay && !this.isLongPressing) {
+            if (this.isSelectionMode) {
+                this.toggleImageSelection(index);
+            } else {
+                setTimeout(() => {
+                    if (!this.isLongPressing) {
+                        this.openFullScreenView(index);
+                    }
+                }, 50);
+            }
+        }
+
+        this.isLongPressing = false;
+        this.touchStartIndex = -1;
+    }
+
+    openFullScreenView(index: number) {
+        this.currentImageIndex = index;
+        this.isFullScreenView = true;
     }
 
     closeFullScreenView() {

@@ -39,70 +39,35 @@
 
     <!-- Grid Gallery View -->
     <div *ngIf="!(loadingService.isLoading$ | async) && galleryImages.length > 0 && !isFullScreenView" class="grid-gallery" (click)="showSmartViewMenu = false; showSmartSelectMenu = false">
-        <!-- Header -->
-        <div class="gallery-header">
-            <button class="select-button" (click)="toggleSelectionMode()" [class.cancel-mode]="isSelectionMode">
-                <svg *ngIf="!isSelectionMode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="18" cy="5" r="3"></circle>
-                    <circle cx="6" cy="12" r="3"></circle>
-                    <circle cx="18" cy="19" r="3"></circle>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                <svg *ngIf="isSelectionMode" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- Modern Header -->
+        <div class="gallery-header" [class.selection-mode]="isSelectionMode">
+            <button class="header-btn cancel-btn" *ngIf="isSelectionMode" (click)="exitSelectionMode()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
-                <span>{{ isSelectionMode ? 'Cancel' : 'Share' }}</span>
             </button>
-            <div class="header-title">
+            <div class="header-title" *ngIf="!isSelectionMode">
                 <h2>AlbumFlux</h2>
                 <span class="image-count">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
             </div>
-            <div class="header-actions">
-                <h2></h2>
-
-
+            <div class="header-title selection-title" *ngIf="isSelectionMode">
+                <span class="selection-count">{{ selectedImages.size }} {{ selectedImages.size === 1 ? 'item' : 'items' }} selected</span>
+                 <button class="header-btn select-all-btn" *ngIf="isSelectionMode" (click)="selectAll()">
+                <span>{{ selectedImages.size === galleryImages.length ? 'Deselect All' : 'Select All' }}</span>
+            </button>
             </div>
-            <div class="header-actions">
-                <h2></h2>
 
-
-            </div>
-            <div class="header-actions">
-                <h2></h2>
-
-
-            </div>
         </div>
 
-        <!-- Selection Toolbar -->
-        <div class="selection-toolbar" *ngIf="isSelectionMode && selectedImages.size > 0">
-            <div class="selection-actions">
-                <button class="toolbar-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 11 12 14 22 4"></polyline>
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                    </svg>
-                    {{ selectedImages.size }} selected
-                </button>
-                <button (click)="selectAll()" class="toolbar-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 11 12 14 22 4"></polyline>
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                    </svg>
-                    {{ selectedImages.size === galleryImages.length ? 'Deselect All' : 'Select All' }}
-                </button>
-                <button (click)="shareSelectedImages()" class="toolbar-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="18" cy="5" r="3"></circle>
-                        <circle cx="6" cy="12" r="3"></circle>
-                        <circle cx="18" cy="19" r="3"></circle>
-                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                    </svg>
-                    Share
-                </button>
+        <!-- Selection Toolbar (Top) -->
+        <div class="selection-toolbar-top" *ngIf="isSelectionMode && selectedImages.size > 0">
+            <div class="selection-info">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <span>{{ selectedImages.size }} selected</span>
             </div>
         </div>
 
@@ -112,18 +77,25 @@
                 *ngFor="let image of displayedImages; let i = index"
                 class="grid-item"
                 [class.selected]="isImageSelected(i)"
-                (click)="openFullScreenView(i)"
+                [class.selection-active]="isSelectionMode"
+                (click)="onImageClick(i, $event)"
+                (touchstart)="onImageTouchStart(i, $event)"
+                (touchend)="onImageTouchEnd(i, $event)"
+                (mousedown)="onImageMouseDown(i, $event)"
+                (mouseup)="onImageMouseUp(i, $event)"
+                (contextmenu)="$event.preventDefault()"
             >
-                <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
+                <div class="image-wrapper">
+                    <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
+                </div>
                 <div class="image-overlay" *ngIf="!isSelectionMode">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
-                    <span>View Full Size</span>
                 </div>
                 <div class="selection-overlay" *ngIf="isSelectionMode">
-                    <div class="checkbox" [class.checked]="isImageSelected(i)">
+                    <div class="selection-checkbox" [class.checked]="isImageSelected(i)">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
@@ -139,16 +111,21 @@
                     *ngFor="let image of displayedImages; let i = index"
                     class="timeline-item"
                     [class.selected]="isImageSelected(i)"
-                    (click)="openFullScreenView(i)"
+                    [class.selection-active]="isSelectionMode"
+                    (click)="onImageClick(i, $event)"
+                    (touchstart)="onImageTouchStart(i, $event)"
+                    (touchend)="onImageTouchEnd(i, $event)"
                 >
                     <div class="timeline-line" *ngIf="i < displayedImages.length - 1"></div>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
+                        <div class="image-wrapper">
+                            <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
+                        </div>
                         <div class="timeline-date">{{ getImageDate(image) }}</div>
                     </div>
                     <div class="selection-overlay" *ngIf="isSelectionMode">
-                        <div class="checkbox" [class.checked]="isImageSelected(i)">
+                        <div class="selection-checkbox" [class.checked]="isImageSelected(i)">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
@@ -170,18 +147,16 @@
                         *ngFor="let image of group.images; let i = index"
                         class="grid-item"
                         [class.selected]="isImageSelected(image.originalIndex)"
-                        (click)="openFullScreenView(image.originalIndex)"
+                        [class.selection-active]="isSelectionMode"
+                        (click)="onImageClick(image.originalIndex, $event)"
+                        (touchstart)="onImageTouchStart(image.originalIndex, $event)"
+                        (touchend)="onImageTouchEnd(image.originalIndex, $event)"
                     >
-                        <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
-                        <div class="image-overlay" *ngIf="!isSelectionMode">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                            <span>View Full Size</span>
+                        <div class="image-wrapper">
+                            <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
                         </div>
                         <div class="selection-overlay" *ngIf="isSelectionMode">
-                            <div class="checkbox" [class.checked]="isImageSelected(image.originalIndex)">
+                            <div class="selection-checkbox" [class.checked]="isImageSelected(image.originalIndex)">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
@@ -190,6 +165,42 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Bottom Action Bar (Selection Mode) -->
+        <div class="bottom-action-bar" *ngIf="isSelectionMode && selectedImages.size > 0">
+            <button class="action-btn share-btn" (click)="shareSelectedImages()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                <span>Share</span>
+            </button>
+            <button class="action-btn download-btn" (click)="downloadSelectedImages()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Download</span>
+            </button>
+            <button class="action-btn delete-btn" (click)="deleteSelectedImages()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <span>Delete</span>
+            </button>
+            <button class="action-btn deselect-btn" (click)="selectedImages.clear()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <span>Deselect</span>
+            </button>
         </div>
     </div>
 
