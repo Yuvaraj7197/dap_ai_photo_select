@@ -13,6 +13,21 @@
         </button>
     </span>
 
+    <!-- Retake Selfie Button - Always Visible (when not in selection mode) -->
+      <span *ngIf="!isFullScreenView">
+    <button
+        class="retake-selfie-btn"
+        type="button"
+        (click)="retakeSelfie()"
+        *ngIf="!isSelectionMode">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        <span>Retake Selfie</span>
+    </button>
+    </span>
+
     <!-- Toast Notification -->
     <div class="toast-notification" [class.show]="showActionToast">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -34,6 +49,13 @@
             <button class="btn primary refresh-btn" type="button" (click)="refreshGallery()">
                 Refresh
             </button>
+            <!-- <button class="btn primary retake-btn" type="button" (click)="retakeSelfie()" style="margin-top: 0.75rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px;">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                Retake Selfie
+            </button> -->
         </div>
     </div>
 
@@ -52,6 +74,13 @@
                 <h2>AlbumFlux</h2>
                 <span class="image-count">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
             </div>
+            <!-- <button class="header-btn retake-header-btn" *ngIf="!isSelectionMode" (click)="retakeSelfie()" title="Retake Selfie">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span>Retake</span>
+            </button> -->
             <!-- <div class="header-title selection-title" *ngIf="isSelectionMode">
                 <span class="selection-count">{{ selectedImages.size }} {{ selectedImages.size === 1 ? 'item' : 'items' }} selected</span>
                  <button class="header-btn select-all-btn" *ngIf="isSelectionMode" (click)="selectAll()">
@@ -168,6 +197,17 @@
             </div>
         </div>
 
+        <!-- Retake Selfie Button (Always visible in gallery view) -->
+        <div class="gallery-retake-container" *ngIf="!isSelectionMode">
+            <button class="gallery-retake-btn" type="button" (click)="retakeSelfie()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span>Retake Selfie</span>
+            </button>
+        </div>
+
         <!-- Bottom Action Bar (Selection Mode) -->
         <div class="bottom-action-bar" *ngIf="isSelectionMode && selectedImages.size > 0">
             <button class="action-btn share-btn" (click)="shareSelectedImages()">
@@ -217,15 +257,23 @@
                 <div class="date-day">{{ currentImageDate.day }}</div>
                 <div class="date-time">{{ currentImageDate.time }}</div>
             </div>
-            <button class="back-button" (click)="shareImage()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="18" cy="5" r="3"></circle>
-                    <circle cx="6" cy="12" r="3"></circle>
-                    <circle cx="18" cy="19" r="3"></circle>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-            </button>
+            <div style="display: flex; gap: 8px;">
+                <!-- <button class="back-button" (click)="retakeSelfie()" title="Retake Selfie">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                </button> -->
+                <button class="back-button" (click)="shareImage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <div class="image-info-panel" [class.show]="showImageInfo">

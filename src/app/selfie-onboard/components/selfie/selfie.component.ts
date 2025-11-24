@@ -53,7 +53,10 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         if (!this.previewImage) {
-            setTimeout(() => this.startCamera(), 200);
+            // Wait a bit longer to ensure DOM is fully rendered
+            setTimeout(() => {
+                this.startCamera();
+            }, 300);
         }
     }
 
@@ -64,25 +67,42 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
 
     async loadFaceApi() {
         try {
+            // Check if faceapi is available
+            if (typeof faceapi === 'undefined' || !faceapi.nets) {
+                console.warn('Face API library not loaded');
+                return;
+            }
+
             this.loadingService.showLoading('Initializing face detection...');
             await faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
             this.faceApiLoaded = true;
             this.loadingService.hideLoading();
+
+            // If camera is already ready, start face detection
+            if (this.videoReady && this.videoElement?.nativeElement) {
+                this.startFaceDetection();
+            }
         } catch (err) {
             this.loadingService.hideLoading();
             console.warn('Face API not available:', err);
+            // Don't block camera functionality if face API fails
+            this.faceApiLoaded = false;
         }
     }
 
-    private async waitForVideoElement(maxAttempts: number = 10, delay: number = 100): Promise<void> {
+    private async waitForVideoElement(maxAttempts: number = 20, delay: number = 150): Promise<void> {
         for (let i = 0; i < maxAttempts; i++) {
             if (this.videoElement?.nativeElement) {
-                return;
+                const video = this.videoElement.nativeElement;
+                // Ensure element is in DOM and not hidden
+                if (video.offsetParent !== null || video.getBoundingClientRect().width > 0) {
+                    return;
+                }
             }
             this.cdr.detectChanges();
             await new Promise((resolve) => setTimeout(resolve, delay));
         }
-        throw new Error('Video element not found in DOM after waiting');
+        throw new Error('Video element not found or not visible in DOM after waiting');
     }
 
     async startCamera() {
@@ -91,13 +111,28 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
             this.stopCamera();
             this.previewImage = null;
             this.onboardService.setPreviewImage(null);
+            this.videoReady = false;
 
+            // Force change detection to ensure previewImage is cleared
             this.cdr.detectChanges();
+
+            // Wait a bit for the DOM to update
+            await new Promise(resolve => setTimeout(resolve, 100));
+
             await this.waitForVideoElement();
 
             if (!this.videoElement?.nativeElement) {
                 throw new Error('Video element not available');
             }
+
+            const video = this.videoElement.nativeElement;
+
+            // Ensure video element is visible
+            if (video.hasAttribute('hidden')) {
+                video.removeAttribute('hidden');
+            }
+            video.style.display = 'block';
+            this.cdr.detectChanges();
 
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 throw new Error('Camera API not supported in this browser.');
@@ -106,8 +141,8 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
             let constraints: MediaStreamConstraints = {
                 video: {
                     facingMode: 'user',
-                    width: { ideal: 1920, min: 640 },
-                    height: { ideal: 1920, min: 640 }
+                    width: { ideal: 1280, min: 640 },
+                    height: { ideal: 1280, min: 640 }
                 },
                 audio: false
             };
@@ -116,52 +151,92 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.videoStream = await navigator.mediaDevices.getUserMedia(constraints);
             } catch (highQualityError) {
                 console.warn('High quality camera failed, trying with basic constraints:', highQualityError);
-                constraints = {
-                    video: { facingMode: 'user' },
-                    audio: false
-                };
-                this.videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                try {
+                    constraints = {
+                        video: {
+                            facingMode: 'user',
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
+                        },
+                        audio: false
+                    };
+                    this.videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } catch (mediumError) {
+                    console.warn('Medium quality camera failed, trying with minimal constraints:', mediumError);
+                    constraints = {
+                        video: { facingMode: 'user' },
+                        audio: false
+                    };
+                    this.videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                }
             }
 
             if (!this.videoStream) {
                 throw new Error('Failed to get camera stream');
             }
 
-            this.videoElement.nativeElement.srcObject = this.videoStream;
+            // Set the stream to video element
+            video.srcObject = this.videoStream;
 
+            // Wait for video to be ready
             await new Promise<void>((resolve, reject) => {
-                const video = this.videoElement.nativeElement;
+                const timeout = setTimeout(() => {
+                    reject(new Error('Video loading timeout'));
+                }, 10000); // 10 second timeout
+
                 const onLoadedMetadata = () => {
+                    clearTimeout(timeout);
                     video.removeEventListener('loadedmetadata', onLoadedMetadata);
+                    video.removeEventListener('error', onError);
                     resolve();
                 };
-                const onError = () => {
+
+                const onError = (error: any) => {
+                    clearTimeout(timeout);
+                    video.removeEventListener('loadedmetadata', onLoadedMetadata);
                     video.removeEventListener('error', onError);
-                    reject(new Error('Video failed to load'));
+                    reject(new Error('Video failed to load: ' + (error?.message || 'Unknown error')));
                 };
+
                 video.addEventListener('loadedmetadata', onLoadedMetadata);
                 video.addEventListener('error', onError);
-                video
-                    .play()
+
+                // Try to play the video
+                video.play()
                     .then(() => {
                         if (video.readyState >= 2) {
+                            clearTimeout(timeout);
                             video.removeEventListener('loadedmetadata', onLoadedMetadata);
                             video.removeEventListener('error', onError);
                             resolve();
                         }
                     })
-                    .catch(reject);
+                    .catch((playError) => {
+                        // If play fails but metadata is loaded, still resolve
+                        if (video.readyState >= 2) {
+                            clearTimeout(timeout);
+                            video.removeEventListener('loadedmetadata', onLoadedMetadata);
+                            video.removeEventListener('error', onError);
+                            resolve();
+                        } else {
+                            reject(playError);
+                        }
+                    });
             });
 
             this.videoReady = true;
+            this.cdr.detectChanges();
 
+            // Start face detection if available
             if (this.faceApiLoaded) {
                 this.startFaceDetection();
             }
+
             this.loadingService.hideLoading();
         } catch (err: any) {
             this.loadingService.hideLoading();
             this.videoReady = false;
+            this.stopCamera();
 
             let errorMessage = 'We could not access your camera.';
             if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
@@ -170,6 +245,11 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
                 errorMessage = 'No camera found. Please connect a camera and try again.';
             } else if (err?.name === 'NotReadableError' || err?.name === 'TrackStartError') {
                 errorMessage = 'Camera is being used by another application. Please close it and try again.';
+            } else if (err?.name === 'OverconstrainedError') {
+                errorMessage = 'Camera constraints not supported. Trying with basic settings...';
+                // Retry with basic constraints
+                setTimeout(() => this.startCamera(), 1000);
+                return;
             } else if (err?.message) {
                 errorMessage = err.message;
             }
@@ -186,9 +266,19 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.videoStream) {
-            this.videoStream.getTracks().forEach((t) => t.stop());
+            this.videoStream.getTracks().forEach((t) => {
+                t.stop();
+                t.enabled = false;
+            });
             this.videoStream = null;
         }
+
+        if (this.videoElement?.nativeElement) {
+            const video = this.videoElement.nativeElement;
+            video.srcObject = null;
+            video.pause();
+        }
+
         this.videoReady = false;
         this.isFaceAligned = false;
     }
@@ -196,19 +286,35 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
     startFaceDetection() {
         if (this.detectionInterval) return;
 
+        // Check if face API is available
+        if (typeof faceapi === 'undefined' || !faceapi.detectSingleFace) {
+            console.warn('Face API not available for detection');
+            return;
+        }
+
         this.detectionInterval = setInterval(async () => {
-            const video = this.videoElement.nativeElement;
-            if (!video || video.readyState !== 4) return;
+            const video = this.videoElement?.nativeElement;
+            if (!video || video.readyState !== 4 || !this.videoReady) {
+                return;
+            }
 
             try {
                 const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
-                if (detection) {
-                    this.isFaceAligned = true;
-                } else {
-                    this.isFaceAligned = false;
+                const wasAligned = this.isFaceAligned;
+                this.isFaceAligned = !!detection;
+
+                // Only trigger change detection if alignment state changed
+                if (wasAligned !== this.isFaceAligned) {
+                    this.cdr.detectChanges();
                 }
-            } catch (err) {
+            } catch (err: any) {
                 console.warn('Face detection error:', err);
+                // If face detection fails repeatedly, stop trying
+                if (err && typeof err === 'object' && 'message' in err &&
+                    typeof err.message === 'string' && err.message.includes('not loaded')) {
+                    clearInterval(this.detectionInterval);
+                    this.detectionInterval = null;
+                }
             }
         }, 350);
     }

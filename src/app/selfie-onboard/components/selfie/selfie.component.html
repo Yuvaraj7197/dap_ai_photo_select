@@ -45,7 +45,7 @@
                         muted
                         playsinline
                         class="video-stream"
-                        [hidden]="previewImage"
+                        [style.display]="previewImage ? 'none' : 'block'"
                     ></video>
                     <img
                         *ngIf="previewImage"

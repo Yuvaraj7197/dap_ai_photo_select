@@ -1339,6 +1339,116 @@ $gallery-transition-medium: 0.3s ease;
     }
 }
 
+// ===== RETAKE SELFIE BUTTON (Fixed Position) =====
+.retake-selfie-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #007AFF, #0051D5);
+    border: none;
+    border-radius: 30px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
+    min-width: 160px;
+    justify-content: center;
+
+    &:hover {
+        background: linear-gradient(135deg, #0051D5, #003d9e);
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 122, 255, 0.5);
+    }
+
+    &:active {
+        transform: translateX(-50%) translateY(0);
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+        stroke: white;
+        stroke-width: 2.5;
+    }
+
+    span {
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    // Add a subtle glow effect
+    &::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(135deg, #007AFF, #0051D5);
+        border-radius: 32px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+        filter: blur(8px);
+    }
+
+    &:hover::before {
+        opacity: 0.3;
+    }
+
+    // Responsive adjustments
+    @media (max-width: 768px) {
+        bottom: 16px;
+        padding: 12px 20px;
+        font-size: 14px;
+        min-width: 140px;
+        gap: 6px;
+
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        bottom: 12px;
+        padding: 10px 16px;
+        font-size: 13px;
+        min-width: 130px;
+        gap: 6px;
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        span {
+            font-size: 12px;
+        }
+    }
+}
+
+// ===== RETAKE BUTTON IN HEADER =====
+.retake-header-btn {
+    color: #007AFF !important;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    span {
+        font-size: 14px;
+    }
+}
+
 // ===== TOAST NOTIFICATION =====
 .toast-notification {
     position: fixed;
@@ -1417,7 +1527,7 @@ $gallery-transition-medium: 0.3s ease;
         line-height: 1.5;
     }
 
-    .refresh-btn {
+        .refresh-btn {
         margin-top: 8px;
         display: flex;
         align-items: center;
@@ -1447,6 +1557,32 @@ $gallery-transition-medium: 0.3s ease;
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+    }
+
+    .retake-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+
+        &:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        svg {
+            flex-shrink: 0;
         }
     }
 }
@@ -1642,6 +1778,11 @@ $gallery-transition-medium: 0.3s ease;
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+// ===== GALLERY RETAKE BUTTON CONTAINER (Hidden - using fixed button instead) =====
+.gallery-retake-container {
+    display: none; // Using fixed button instead for always visible
 }
 
 // ===== BOTTOM ACTION BAR =====
@@ -2454,7 +2595,7 @@ $gallery-transition-medium: 0.3s ease;
 
 @media (max-width: 480px) {
     .image-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         gap: 0.2rem;
     }
 

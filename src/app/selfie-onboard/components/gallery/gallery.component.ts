@@ -760,5 +760,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
         this.onboardService.clearUserData();
         this.router.navigate(['/event/selfie-onboarding/signup']);
     }
+
+    retakeSelfie() {
+        this.router.navigate(['/event/selfie-onboarding/selfie']);
+    }
 }
 
