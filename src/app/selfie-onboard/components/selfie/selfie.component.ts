@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -14,7 +15,7 @@ declare const faceapi: any;
 @Component({
     selector: 'app-selfie',
     standalone: true,
-    imports: [CommonModule, RouterModule, LoadingOverlayComponent, NotificationStackComponent],
+    imports: [CommonModule, FormsModule, RouterModule, LoadingOverlayComponent, NotificationStackComponent],
     templateUrl: './selfie.component.html',
     styleUrl: './selfie.component.scss'
 })
@@ -28,6 +29,9 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
     faceApiLoaded = false;
     detectionInterval: any;
     isFaceAligned = false;
+    isSubmitting = false;
+    showMobileInput = false; // Set to true if you want to show mobile input
+    mobileNumber = '';
     private apiUrl = `${environment.baseURL}`;
     user_details: any;
 
@@ -250,7 +254,11 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-       const user_id = localStorage.getItem('ai_user_id');
+        if (this.isSubmitting) {
+            return;
+        }
+
+        const user_id = localStorage.getItem('ai_user_id');
         const accessToken = localStorage.getItem('ai_access');
 
         if (!user_id) {
@@ -258,12 +266,18 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
+        this.isSubmitting = true;
         const imageBlob = this.dataURLtoBlob(this.previewImage);
         const imageFile = new File([imageBlob], 'selfie.png', { type: 'image/png' });
 
         const formData = new FormData();
         formData.append('user_id', user_id);
         formData.append('image', imageFile, 'selfie.png');
+
+        // Add mobile number if provided
+        if (this.mobileNumber && this.mobileNumber.trim()) {
+            formData.append('mobile_number', this.mobileNumber.trim());
+        }
 
         let headers = new HttpHeaders({
             Authorization: `Bearer ${accessToken}`
@@ -275,15 +289,26 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
             next: (response: any) => {
                 this.onboardService.setSubmissionData(response);
                 this.loadingService.hideLoading();
+                this.isSubmitting = false;
                 this.notificationService.notify('success', 'Submission complete', 'Registration completed successfully.');
                 this.router.navigate(['/event/selfie-onboarding/summary']);
             },
             error: (err) => {
                 this.loadingService.hideLoading();
+                this.isSubmitting = false;
                 this.notificationService.notify('error', 'Submission failed', err.error?.message || 'Please try again.');
                 console.error('Submit error:', err);
             }
         });
+    }
+
+    showHelp() {
+        this.notificationService.notify('info', 'Selfie Tips',
+            '• Ensure good lighting\n' +
+            '• Center your face in the frame\n' +
+            '• Remove glasses if possible\n' +
+            '• Look directly at the camera'
+        );
     }
 
     private dataURLtoBlob(dataURL: string): Blob {

@@ -1,59 +1,170 @@
 <div class="selfie-onboard-container">
     <app-loading-overlay></app-loading-overlay>
     <app-notification-stack></app-notification-stack>
-    <div class="card-container">
-        <div class="logo-container">
-            <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
-        </div>
-        <button class="logout-btn" type="button" (click)="backToLogin()">
-            <span class="icon">↺</span>
-            Logout
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <button class="back-btn" type="button" (click)="backToLogin()" aria-label="Go back">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
         </button>
+        <h1 class="top-title">Take a Selfie</h1>
+        <button class="help-btn" type="button" (click)="showHelp()" aria-label="Help">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/>
+            </svg>
+        </button>
+    </div>
 
-        <section class="screen-card selfie-screen">
-            <div class="hero-intro">
-                <p class="eyebrow">Step 3</p>
-                <h1 class="title">Capture your photo</h1>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Optional Mobile Number Input -->
+        <div class="mobile-input-section" *ngIf="showMobileInput">
+            <div class="floating-input">
+                <input
+                    type="tel"
+                    id="mobileNumber"
+                    placeholder=" "
+                    [(ngModel)]="mobileNumber"
+                    maxlength="15"
+                    pattern="[0-9+\-\s()]*"
+                />
+                <label for="mobileNumber">Mobile Number (Optional)</label>
             </div>
+        </div>
 
-            <div class="capture-area">
-                <div class="video-wrap">
-                    <video #videoElement autoplay muted playsinline class="video" [hidden]="previewImage"></video>
-                    <img *ngIf="previewImage" [src]="previewImage" alt="Captured selfie" class="preview-image" />
-                    <div *ngIf="!previewImage" class="oval" [ngClass]="{'aligned': isFaceAligned}"></div>
-                    <div class="capture-status" [ngClass]="{'ok': isFaceAligned}">
-                        <span class="status-icon" [ngClass]="isFaceAligned ? 'check' : 'info'"></span>
-                        <span *ngIf="isFaceAligned">Perfect alignment — tap capture!</span>
-                        <span *ngIf="!isFaceAligned">Move a little closer to centre your face</span>
+        <!-- Camera Preview Area -->
+        <div class="camera-section">
+            <div class="camera-wrapper">
+                <div class="video-container">
+                    <video
+                        #videoElement
+                        autoplay
+                        muted
+                        playsinline
+                        class="video-stream"
+                        [hidden]="previewImage"
+                    ></video>
+                    <img
+                        *ngIf="previewImage"
+                        [src]="previewImage"
+                        alt="Captured selfie"
+                        class="preview-image"
+                    />
+
+                    <!-- Face Alignment Guide -->
+                    <div *ngIf="!previewImage" class="face-guide" [ngClass]="{'aligned': isFaceAligned}">
+                        <div class="guide-ring"></div>
+                        <div class="guide-corners">
+                            <div class="corner top-left"></div>
+                            <div class="corner top-right"></div>
+                            <div class="corner bottom-left"></div>
+                            <div class="corner bottom-right"></div>
+                        </div>
+                    </div>
+
+                    <!-- Status Indicator -->
+                    <div *ngIf="!previewImage" class="status-indicator" [ngClass]="{'success': isFaceAligned}">
+                        <div class="status-icon-wrapper">
+                            <svg *ngIf="isFaceAligned" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <svg *ngIf="!isFaceAligned" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                        </div>
+                        <span class="status-text">
+                            <span *ngIf="isFaceAligned">Perfect! Ready to capture</span>
+                            <span *ngIf="!isFaceAligned">Center your face in the frame</span>
+                        </span>
                     </div>
                 </div>
 
+                <!-- Hidden Canvas for Capture -->
                 <canvas #canvasElement style="display:none;"></canvas>
+            </div>
 
-                <div class="actions selfie-actions" *ngIf="!previewImage">
-                    <button class="btn primary" type="button" (click)="capture()" [disabled]="!videoReady">
-                        <span class="icon">📷</span>
-                        Capture
-                    </button>
-                </div>
-
-                <div class="actions selfie-actions" *ngIf="previewImage">
-                    <button class="btn outline" type="button" (click)="retake()">
-                        <span class="icon">🔄</span>
-                        Retake
-                    </button>
-                </div>
-
-                <div class="actions two submit-row">
-                    <button class="btn secondary" type="button" (click)="backToLogin()">
-                        Back
-                    </button>
-                    <button class="btn primary" type="button" (click)="submit()" [disabled]="!previewImage">
-                        Submit
-                    </button>
+            <!-- Thumbnail Preview (shown after capture) -->
+            <div class="thumbnail-preview" *ngIf="previewImage">
+                <img [src]="previewImage" alt="Preview" />
+                <div class="thumbnail-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-section">
+            <!-- Capture/Retake Button -->
+            <button
+                *ngIf="!previewImage"
+                class="btn-capture"
+                type="button"
+                (click)="capture()"
+                [disabled]="!videoReady || isSubmitting"
+                [class.loading]="isSubmitting"
+            >
+                <span class="btn-ripple" *ngIf="!isSubmitting"></span>
+                <span class="btn-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6M23 12h-6m-6 0H1"/>
+                    </svg>
+                </span>
+                <span class="btn-text">Capture</span>
+            </button>
+
+            <button
+                *ngIf="previewImage"
+                class="btn-retake"
+                type="button"
+                (click)="retake()"
+                [disabled]="isSubmitting"
+            >
+                <span class="btn-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                </span>
+                <span class="btn-text">Retake</span>
+            </button>
+
+            <!-- Submit Button -->
+            <button
+                class="btn-submit"
+                type="button"
+                (click)="submit()"
+                [disabled]="!previewImage || isSubmitting"
+                [class.loading]="isSubmitting"
+            >
+                <span class="btn-ripple" *ngIf="!isSubmitting"></span>
+                <span class="btn-spinner" *ngIf="isSubmitting">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="31.416" fill="none" opacity="0.3"/>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="23.562" fill="none">
+                            <animate attributeName="stroke-dashoffset" dur="1s" values="31.416;0;31.416" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </span>
+                <span class="btn-icon" *ngIf="!isSubmitting">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </span>
+                <span class="btn-text">
+                    <span *ngIf="!isSubmitting">Submit</span>
+                    <span *ngIf="isSubmitting">Submitting...</span>
+                </span>
+            </button>
+        </div>
     </div>
 </div>
 
