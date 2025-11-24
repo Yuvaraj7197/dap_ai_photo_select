@@ -1,152 +1,174 @@
 <div class="selfie-onboard-container">
     <app-loading-overlay></app-loading-overlay>
     <app-notification-stack></app-notification-stack>
-    <div class="card-container">
+    
+    <!-- REGISTER SCREEN -->
+    <form *ngIf="!isRegisterMode" [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="form-card register-screen">
         <div class="logo-container">
             <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
+            <div class="logo-taglines">
+                <span class="tagline-item">
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Preserve
+                </span>
+                <span class="tagline-item">
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    Connect
+                </span>
+                <span class="tagline-item">
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Inspire
+                </span>
+            </div>
         </div>
-
-        <!-- REGISTER SCREEN -->
-        <section *ngIf="!isRegisterMode" class="screen-card register-screen">
-            <div class="hero-intro">
-                <h1 class="title custom-title">Welcome to</h1>
-                <p class="subtitle">{{ eventData.eventName || '—' }}, {{ eventData.location || '—' }}</p>
+        <div class="form-section">
+            <h1 class="welcome-title">Welcome to</h1>
+            <p class="form-subtitle" *ngIf="eventData.eventName || eventData.location">{{ eventData.eventName || '—' }}, {{ eventData.location || '—' }}</p>
+            <h2 class="form-title">Register</h2>
+            
+            <div class="floating-input" [class.invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+                <input formControlName="name" placeholder=" " autocomplete="name" />
+                <label>Full name *</label>
+                <span class="input-hint" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+                    Name must be at least 2 characters
+                </span>
             </div>
-
-            <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="form-section">
-                <div class="hero-intro">
-                    <h1 class="title custom-title">Register</h1>
-                </div>
-                    <div class="floating-input" [class.invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
-                        <input formControlName="name" placeholder=" " autocomplete="name" />
-                        <label>Full name *</label>
-                        <span class="input-hint" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
-                            Name must be at least 2 characters
-                        </span>
-                    </div>
-                    <div class="floating-input" [class.invalid]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
-                        <input formControlName="phone" maxlength="10" placeholder=" " inputmode="numeric" autocomplete="tel-national" />
-                        <label>Phone number *</label>
-                        <span class="input-hint" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
-                            Please enter a valid 10-digit phone number
-                        </span>
-                    </div>
-
-                <div class="floating-input" [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-                    <input type="email" formControlName="email" placeholder=" " autocomplete="email" />
-                    <label>Email address *</label>
-                    <span class="input-hint" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-                        Please enter a valid email address
-                    </span>
-                </div>
-
-                <div class="floating-input password-input" [class.invalid]="registerForm.get('Password')?.invalid && registerForm.get('Password')?.touched">
-                    <input [type]="showRegisterPassword ? 'text' : 'password'" formControlName="Password" placeholder=" " autocomplete="new-password" />
-                    <label>Password *</label>
-                    <button type="button" class="password-toggle" (click)="toggleRegisterPasswordVisibility()" tabindex="-1">
-                        <svg *ngIf="showRegisterPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        <svg *ngIf="!showRegisterPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                        </svg>
-                    </button>
-                    <span class="input-hint" *ngIf="registerForm.get('Password')?.invalid && registerForm.get('Password')?.touched">
-                        Password must be at least 6 characters
-                    </span>
-                </div>
-
-                <div class="terms-checkbox-container" [class.invalid]="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
-                    <label class="terms-checkbox-label">
-                        <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="terms-checkbox-input" />
-                        <span class="terms-checkbox-custom">
-                            <svg class="terms-checkmark" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </span>
-                        <span class="terms-checkbox-text">
-                            By signing up you agree to our
-                            <a href="https://studio.albumflux.com/#/terms-condition" target="_blank" rel="noopener noreferrer" class="terms-link">Terms and Conditions</a>,
-                            <a href="https://studio.albumflux.com/#/privacy" target="_blank" rel="noopener noreferrer" class="terms-link">Privacy Policy</a>.
-                        </span>
-                    </label>
-                    <span class="input-hint" *ngIf="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
-                        You must accept the terms and conditions
-                    </span>
-                </div>
-
-                <div class="actions two">
-                    <button class="btn primary" type="submit" [disabled]="registerForm.invalid">
-                        Create account
-                    </button>
-                </div>
-
-                <div class="divider">
-                    <span>or</span>
-                </div>
-
-                <div class="google-signin-wrapper">
-                    <div id="google-signin-btn"></div>
-                </div>
-
-                <p class="helper-text muted">Already have an account? <a (click)="showLoginForm()">Sign in</a></p>
-            </form>
-             <div class="marketing-footer">
-                <p class="marketing-footer-text">Powered by <a href="https://www.albumflux.com" target="_blank"><strong>AlbumFlux</strong></a> — Your memories, beautifully preserved</p>
+            <div class="floating-input" [class.invalid]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+                <input formControlName="phone" maxlength="10" placeholder=" " inputmode="numeric" autocomplete="tel-national" />
+                <label>Phone number *</label>
+                <span class="input-hint" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+                    Please enter a valid 10-digit phone number
+                </span>
             </div>
-        </section>
-
-        <!-- LOGIN SCREEN -->
-        <section *ngIf="isRegisterMode" class="screen-card login-screen">
-
-
-            <form [formGroup]="LoginForm" (ngSubmit)="onLoginSubmit()" class="form-section condensed" autocomplete="on">
-                <div class="floating-input" [class.invalid]="LoginForm.get('email')?.invalid && LoginForm.get('email')?.touched">
-                    <input type="email" formControlName="email" placeholder=" " autocomplete="email" />
-                    <label>Email address *</label>
-                    <span class="input-hint" *ngIf="LoginForm.get('email')?.invalid && LoginForm.get('email')?.touched">
-                        Please enter a valid email address
-                    </span>
-                </div>
-
-                <div class="floating-input password-input" [class.invalid]="LoginForm.get('Password')?.invalid && LoginForm.get('Password')?.touched">
-                    <input [type]="showLoginPassword ? 'text' : 'password'" formControlName="Password" placeholder=" " autocomplete="current-password" />
-                    <label>Password *</label>
-                    <button type="button" class="password-toggle" (click)="toggleLoginPasswordVisibility()" tabindex="-1">
-                        <svg *ngIf="showLoginPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        <svg *ngIf="!showLoginPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                        </svg>
-                    </button>
-                    <span class="input-hint" *ngIf="LoginForm.get('Password')?.invalid && LoginForm.get('Password')?.touched">
-                        Password must be at least 6 characters
-                    </span>
-                </div>
-
-                <button class="btn primary full" type="submit" [disabled]="LoginForm.invalid">
-                    Sign in
+            <div class="floating-input" [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                <input type="email" formControlName="email" placeholder=" " autocomplete="email" />
+                <label>Email address *</label>
+                <span class="input-hint" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                    Please enter a valid email address
+                </span>
+            </div>
+            <div class="floating-input password-input" [class.invalid]="registerForm.get('Password')?.invalid && registerForm.get('Password')?.touched">
+                <input [type]="showRegisterPassword ? 'text' : 'password'" formControlName="Password" placeholder=" " autocomplete="new-password" />
+                <label>Password *</label>
+                <button type="button" class="password-toggle" (click)="toggleRegisterPasswordVisibility()" tabindex="-1">
+                    <svg *ngIf="showRegisterPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg *ngIf="!showRegisterPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
                 </button>
-
-                <div class="divider">
-                    <span>or</span>
-                </div>
-
-                <div class="google-signup-wrapper">
-                    <div id="google-signup-btn"></div>
-                </div>
-                  <p class="helper-text muted">Don't have an account? <a (click)="showRegisterForm()">Sign up</a></p>
-            </form>
-            <div class="marketing-footer">
-                <p class="marketing-footer-text">Powered by <a href="https://www.albumflux.com" target="_blank"><strong>AlbumFlux</strong></a> — Your memories, beautifully preserved</p>
+                <span class="input-hint" *ngIf="registerForm.get('Password')?.invalid && registerForm.get('Password')?.touched">
+                    Password must be at least 8 characters
+                </span>
             </div>
-        </section>
+            <div class="terms-checkbox-container" [class.invalid]="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
+                <label class="terms-checkbox-label">
+                    <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="terms-checkbox-input" />
+                    <span class="terms-checkbox-custom">
+                        <svg class="terms-checkmark" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="terms-checkbox-text">
+                        By signing up you agree to our <a href="https://studio.albumflux.com/#/terms-condition" target="_blank" rel="noopener noreferrer" class="terms-link">Terms and Conditions</a>, <a href="https://studio.albumflux.com/#/privacy" target="_blank" rel="noopener noreferrer" class="terms-link">Privacy Policy</a>.
+                    </span>
+                </label>
+                <span class="input-hint" *ngIf="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
+                    You must accept the terms
+                </span>
+            </div>
+            <button class="btn primary full" type="submit" [disabled]="registerForm.invalid">
+                Create account
+            </button>
+            <div class="divider">
+                <span>or</span>
+            </div>
+            <div class="google-signin-wrapper">
+                <div id="google-signin-btn"></div>
+            </div>
+            <p class="helper-text muted">Already have an account? <a (click)="showLoginForm()">Sign in</a></p>
+        </div>
+        <div class="marketing-footer">
+            <p class="marketing-footer-text">Powered by <a href="https://www.albumflux.com" target="_blank"><strong>AlbumFlux</strong></a> — Your memories, beautifully preserved</p>
+        </div>
+    </form>
 
-    </div>
+    <!-- LOGIN SCREEN -->
+    <form *ngIf="isRegisterMode" [formGroup]="LoginForm" (ngSubmit)="onLoginSubmit()" class="form-card login-screen condensed" autocomplete="on">
+        <div class="logo-container">
+            <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
+            <div class="logo-taglines">
+                <span class="tagline-item">
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Preserve
+                </span>
+                <span class="tagline-item">
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    Connect
+                </span>
+                <span class="tagline-item">
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Inspire
+                </span>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2 class="form-title">Sign in</h2>
+            <div class="floating-input" [class.invalid]="LoginForm.get('email')?.invalid && LoginForm.get('email')?.touched">
+                <input type="email" formControlName="email" placeholder=" " autocomplete="email" />
+                <label>Email address *</label>
+                <span class="input-hint" *ngIf="LoginForm.get('email')?.invalid && LoginForm.get('email')?.touched">
+                    Please enter a valid email address
+                </span>
+            </div>
+            <div class="floating-input password-input" [class.invalid]="LoginForm.get('Password')?.invalid && LoginForm.get('Password')?.touched">
+                <input [type]="showLoginPassword ? 'text' : 'password'" formControlName="Password" placeholder=" " autocomplete="current-password" />
+                <label>Password *</label>
+                <button type="button" class="password-toggle" (click)="toggleLoginPasswordVisibility()" tabindex="-1">
+                    <svg *ngIf="showLoginPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg *ngIf="!showLoginPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                </button>
+                <span class="input-hint" *ngIf="LoginForm.get('Password')?.invalid && LoginForm.get('Password')?.touched">
+                    Password must be at least 6 characters
+                </span>
+            </div>
+            <button class="btn primary full" type="submit" [disabled]="LoginForm.invalid">
+                Sign in
+            </button>
+            <div class="divider">
+                <span>or</span>
+            </div>
+            <div class="google-signup-wrapper">
+                <div id="google-signup-btn"></div>
+            </div>
+            <p class="helper-text muted">Don't have an account? <a (click)="showRegisterForm()">Sign up</a></p>
+        </div>
+        <div class="marketing-footer">
+            <p class="marketing-footer-text">Powered by <a href="https://www.albumflux.com" target="_blank"><strong>AlbumFlux</strong></a> — Your memories, beautifully preserved</p>
+        </div>
+    </form>
 </div>
 

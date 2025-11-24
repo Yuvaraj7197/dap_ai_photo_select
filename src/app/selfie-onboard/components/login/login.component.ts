@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         private fb: FormBuilder,
         private http: HttpClient,
         private router: Router,
+        private cdr: ChangeDetectorRef,
         private route: ActivatedRoute,
         private onboardService: SelfieOnboardService,
         private notificationService: NotificationService,
@@ -118,11 +119,12 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         if (signInButton) {
             signInButton.innerHTML = '';
             google.accounts.id.renderButton(signInButton, {
-                theme: 'filled_blue',
-                size: 'large',
+                theme: 'outline',
+                size: 'medium',
                 type: 'standard',
                 text: 'signin_with',
-                shape: 'pill',
+                shape: 'rectangular',
+                width: '100%'
             });
         }
 
@@ -130,11 +132,12 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         if (signUpButton) {
             signUpButton.innerHTML = '';
             google.accounts.id.renderButton(signUpButton, {
-                theme: 'filled_blue',
-                size: 'large',
+                theme: 'outline',
+                size: 'medium',
                 type: 'standard',
                 text: 'signin_with',
-                shape: 'pill',
+                shape: 'rectangular',
+                width: '100%'
             });
         }
     }
