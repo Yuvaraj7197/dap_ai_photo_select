@@ -45,7 +45,7 @@
                 <circle cx="320" cy="80" r="2.5" fill="#E5E5E5" opacity="0.4"/>
                 <circle cx="150" cy="240" r="2.5" fill="#E5E5E5" opacity="0.4"/>
                 <circle cx="280" cy="220" r="2.5" fill="#E5E5E5" opacity="0.4"/>
-                
+
                 <!-- Male Figure (Left) -->
                 <g class="figure-male">
                     <!-- Head -->
@@ -61,7 +61,7 @@
                     <!-- Left arm holding package -->
                     <ellipse cx="96" cy="142" rx="9" ry="28" fill="#F5D5C4" transform="rotate(-25 96 142)"/>
                 </g>
-                
+
                 <!-- Female Figure (Right) -->
                 <g class="figure-female">
                     <!-- Head -->
@@ -77,7 +77,7 @@
                     <!-- Right arm holding package -->
                     <ellipse cx="304" cy="142" rx="9" ry="28" fill="#D4A574" transform="rotate(25 304 142)"/>
                 </g>
-                
+
                 <!-- Package (Yellow and Black) -->
                 <g class="package">
                     <!-- Main yellow body -->
@@ -87,7 +87,7 @@
                     <!-- Black bottom edge -->
                     <rect x="158" y="174" width="84" height="10" rx="4" fill="#1A1A1A"/>
                 </g>
-                
+
                 <!-- Ground line -->
                 <line x1="50" y1="210" x2="350" y2="210" stroke="#E5E5E5" stroke-width="1.5" opacity="0.2"/>
             </svg>
@@ -145,6 +145,11 @@
                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                 </svg>
                 <span>{{ selectedImages.size }} selected</span>
+            </div>
+            <div class="header-title selection-title" *ngIf="isSelectionMode">
+                 <button class="gallery-retake-btn" *ngIf="isSelectionMode" (click)="selectAll()">
+                <span>{{ selectedImages.size === galleryImages.length ? 'Deselect All' : 'Select All' }}</span>
+            </button>
             </div>
         </div>
 
@@ -256,9 +261,10 @@
         </div>
 
         <!-- Bottom Action Bar (Selection Mode) -->
-        <div class="bottom-action-bar" *ngIf="isSelectionMode && selectedImages.size > 0">
+        <div class="bottom-action-bar" >
             <button class="action-btn share-btn" (click)="shareSelectedImages()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                [ariaDisabled]="isSelectionMode && selectedImages.size > 0">
                     <circle cx="18" cy="5" r="3"></circle>
                     <circle cx="6" cy="12" r="3"></circle>
                     <circle cx="18" cy="19" r="3"></circle>
@@ -267,7 +273,7 @@
                 </svg>
                 <span>Share</span>
             </button>
-            <button class="action-btn download-btn" (click)="downloadSelectedImages()">
+            <button class="action-btn download-btn" (click)="downloadSelectedImages()" [ariaDisabled]="isSelectionMode && selectedImages.size > 0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
@@ -275,20 +281,7 @@
                 </svg>
                 <span>Download</span>
             </button>
-            <button class="action-btn delete-btn" (click)="deleteSelectedImages()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-                <span>Delete</span>
-            </button>
-            <button class="action-btn deselect-btn" (click)="selectedImages.clear()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-                <span>Deselect</span>
-            </button>
+
         </div>
     </div>
 
@@ -305,12 +298,7 @@
                 <div class="date-time">{{ currentImageDate.time }}</div>
             </div>
             <div style="display: flex; gap: 8px;">
-                <!-- <button class="back-button" (click)="retakeSelfie()" title="Retake Selfie">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                        <circle cx="12" cy="13" r="4"></circle>
-                    </svg>
-                </button> -->
+
                 <button class="back-button" (click)="shareImage()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="18" cy="5" r="3"></circle>
