@@ -248,8 +248,8 @@
 
             <button
                 class="action-btn share-btn"
-                (click)="isSelectionMode ? shareSelectedImages() : shareAllImages()"
-                [disabled]="isSelectionMode && selectedImages.size === 0">
+                (click)="shareSelectedImages()"
+                [disabled]="selectedImages.size === 0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="18" cy="5" r="3"></circle>
                     <circle cx="6" cy="12" r="3"></circle>
@@ -262,8 +262,8 @@
 
             <button
                 class="action-btn download-btn"
-                (click)="isSelectionMode ? downloadSelectedImages() : downloadImage()"
-                [disabled]="isSelectionMode && selectedImages.size === 0">
+                (click)="downloadSelectedImages()"
+                [disabled]="selectedImages.size === 0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
