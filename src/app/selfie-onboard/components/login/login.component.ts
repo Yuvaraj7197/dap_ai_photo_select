@@ -119,12 +119,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         if (signInButton) {
             signInButton.innerHTML = '';
             google.accounts.id.renderButton(signInButton, {
-                theme: 'outline',
-                size: 'medium',
+               theme: 'filled_blue',
+                size: 'large',
                 type: 'standard',
                 text: 'signin_with',
-                shape: 'rectangular',
-                width: '100%'
+                shape: 'pill',
             });
         }
 
@@ -132,12 +131,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         if (signUpButton) {
             signUpButton.innerHTML = '';
             google.accounts.id.renderButton(signUpButton, {
-                theme: 'outline',
-                size: 'medium',
+                theme: 'filled_blue',
+                size: 'large',
                 type: 'standard',
                 text: 'signin_with',
-                shape: 'rectangular',
-                width: '100%'
+                shape: 'pill',
             });
         }
     }
