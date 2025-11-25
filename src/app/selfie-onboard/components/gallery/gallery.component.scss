@@ -1757,8 +1757,8 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
         }
 
         &.logout-btn {
-            padding: $gallery-spacing-sm;
-            border-radius: $gallery-radius-md;
+            padding: 4px;
+            border-radius: 8px;
             color: $gallery-danger-color;
 
             &:active {

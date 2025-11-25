@@ -303,6 +303,44 @@ export class GalleryComponent implements OnInit, OnDestroy {
         this.downloadAllImages();
     }
 
+    async downloadCurrentImage() {
+        const image = this.currentGalleryImage;
+        if (!image) {
+            this.showToast('No image to download');
+            return;
+        }
+
+        const imageUrl = image?.url || image?.image_url || image;
+        if (!imageUrl) {
+            this.showToast('Image URL not found');
+            return;
+        }
+
+        try {
+            this.loadingService.showLoading('Downloading image...');
+
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const fileType = blob.type || 'image/jpeg';
+            const fileName = `selfie_${this.currentImageIndex + 1}.${fileType.split('/')[1] || 'jpg'}`;
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+
+            this.showToast('Image downloaded successfully');
+        } catch (error: any) {
+            console.error('Error downloading image:', error);
+            this.showToast('Failed to download image');
+        } finally {
+            this.loadingService.hideLoading();
+        }
+    }
+
     async downloadAllImages() {
         if (this.galleryImages.length === 0) {
             this.showToast('No images to download');
