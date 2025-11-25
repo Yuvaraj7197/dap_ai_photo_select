@@ -1,32 +1,6 @@
 <section class="gallery-container">
     <app-loading-overlay></app-loading-overlay>
     <app-notification-stack></app-notification-stack>
-    <!-- Logout Button - Top Right -->
-    <span *ngIf="!isFullScreenView || (galleryImages.length === 0) ">
-        <button class="gallery-logout-btn" type="button" (click)="logout()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-            <span>Logout</span>
-        </button>
-    </span>
-
-    <!-- Retake Selfie Button - Always Visible (when not in selection mode) -->
-      <span *ngIf="!isFullScreenView">
-    <button
-        class="retake-selfie-btn"
-        type="button"
-        (click)="retakeSelfie()"
-        *ngIf="!isSelectionMode">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-        </svg>
-        <span>Retake Selfie</span>
-    </button>
-    </span>
 
     <!-- Toast Notification -->
     <div class="toast-notification" [class.show]="showActionToast">
@@ -37,120 +11,130 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!(loadingService.isLoading$ | async) && galleryImages.length === 0" class="empty-state">
+    <div *ngIf="!(loadingService.isLoading$ | async) && galleryImages.length === 0 && !isFullScreenView" class="empty-state">
         <div class="empty-state-content">
-            <svg class="empty-state-illustration" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
-                <!-- Background dots -->
-                <circle cx="80" cy="60" r="2.5" fill="#E5E5E5" opacity="0.4"/>
-                <circle cx="320" cy="80" r="2.5" fill="#E5E5E5" opacity="0.4"/>
-                <circle cx="150" cy="240" r="2.5" fill="#E5E5E5" opacity="0.4"/>
-                <circle cx="280" cy="220" r="2.5" fill="#E5E5E5" opacity="0.4"/>
+            <div class="empty-state-illustration-wrapper">
+                <svg class="empty-state-illustration" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+                    <!-- Background dots -->
+                    <circle cx="80" cy="60" r="2.5" fill="#E5E5E5" opacity="0.4"/>
+                    <circle cx="320" cy="80" r="2.5" fill="#E5E5E5" opacity="0.4"/>
+                    <circle cx="150" cy="240" r="2.5" fill="#E5E5E5" opacity="0.4"/>
+                    <circle cx="280" cy="220" r="2.5" fill="#E5E5E5" opacity="0.4"/>
 
-                <!-- Male Figure (Left) -->
-                <g class="figure-male">
-                    <!-- Head -->
-                    <circle cx="120" cy="100" r="20" fill="#F5D5C4"/>
-                    <!-- Hair -->
-                    <path d="M 103 88 Q 120 82 137 88" stroke="#2C2C2C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                    <!-- Body/Shirt -->
-                    <rect x="103" y="120" width="34" height="52" rx="5" fill="#D3D3D3"/>
-                    <!-- Shirt collar detail -->
-                    <path d="M 108 120 L 120 128 L 132 120" stroke="#B0B0B0" stroke-width="2" fill="none"/>
-                    <!-- Pants -->
-                    <rect x="103" y="172" width="34" height="38" rx="3" fill="#1A1A1A"/>
-                    <!-- Left arm holding package -->
-                    <ellipse cx="96" cy="142" rx="9" ry="28" fill="#F5D5C4" transform="rotate(-25 96 142)"/>
-                </g>
+                    <!-- Male Figure (Left) -->
+                    <g class="figure-male">
+                        <circle cx="120" cy="100" r="20" fill="#F5D5C4"/>
+                        <path d="M 103 88 Q 120 82 137 88" stroke="#2C2C2C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                        <rect x="103" y="120" width="34" height="52" rx="5" fill="#D3D3D3"/>
+                        <path d="M 108 120 L 120 128 L 132 120" stroke="#B0B0B0" stroke-width="2" fill="none"/>
+                        <rect x="103" y="172" width="34" height="38" rx="3" fill="#1A1A1A"/>
+                        <ellipse cx="96" cy="142" rx="9" ry="28" fill="#F5D5C4" transform="rotate(-25 96 142)"/>
+                    </g>
 
-                <!-- Female Figure (Right) -->
-                <g class="figure-female">
-                    <!-- Head -->
-                    <circle cx="280" cy="100" r="20" fill="#D4A574"/>
-                    <!-- Hair (bob style) -->
-                    <path d="M 263 88 Q 280 86 297 88 Q 297 94 292 100" stroke="#2C2C2C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                    <!-- Body/Top -->
-                    <rect x="263" y="120" width="34" height="52" rx="5" fill="#1A1A1A"/>
-                    <!-- Top neckline -->
-                    <path d="M 268 120 Q 280 128 292 120" stroke="#0A0A0A" stroke-width="2" fill="none"/>
-                    <!-- Pants -->
-                    <rect x="263" y="172" width="34" height="38" rx="3" fill="#1A1A1A"/>
-                    <!-- Right arm holding package -->
-                    <ellipse cx="304" cy="142" rx="9" ry="28" fill="#D4A574" transform="rotate(25 304 142)"/>
-                </g>
+                    <!-- Female Figure (Right) -->
+                    <g class="figure-female">
+                        <circle cx="280" cy="100" r="20" fill="#D4A574"/>
+                        <path d="M 263 88 Q 280 86 297 88 Q 297 94 292 100" stroke="#2C2C2C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                        <rect x="263" y="120" width="34" height="52" rx="5" fill="#1A1A1A"/>
+                        <path d="M 268 120 Q 280 128 292 120" stroke="#0A0A0A" stroke-width="2" fill="none"/>
+                        <rect x="263" y="172" width="34" height="38" rx="3" fill="#1A1A1A"/>
+                        <ellipse cx="304" cy="142" rx="9" ry="28" fill="#D4A574" transform="rotate(25 304 142)"/>
+                    </g>
 
-                <!-- Package (Yellow and Black) -->
-                <g class="package">
-                    <!-- Main yellow body -->
-                    <rect x="158" y="132" width="84" height="52" rx="4" fill="#FFD700"/>
-                    <!-- Black top edge -->
-                    <rect x="158" y="132" width="84" height="10" rx="4" fill="#1A1A1A"/>
-                    <!-- Black bottom edge -->
-                    <rect x="158" y="174" width="84" height="10" rx="4" fill="#1A1A1A"/>
-                </g>
+                    <!-- Package -->
+                    <g class="package">
+                        <rect x="158" y="132" width="84" height="52" rx="4" fill="#FFD700"/>
+                        <rect x="158" y="132" width="84" height="10" rx="4" fill="#1A1A1A"/>
+                        <rect x="158" y="174" width="84" height="10" rx="4" fill="#1A1A1A"/>
+                    </g>
 
-                <!-- Ground line -->
-                <line x1="50" y1="210" x2="350" y2="210" stroke="#E5E5E5" stroke-width="1.5" opacity="0.2"/>
-            </svg>
+                    <line x1="50" y1="210" x2="350" y2="210" stroke="#E5E5E5" stroke-width="1.5" opacity="0.2"/>
+                </svg>
+            </div>
             <div class="empty-state-message">
-                <p class="empty-state-text">No Images Found</p>
-                <p class="empty-state-subtext">We're still processing your photos. This may take a few moments.</p>
-                <button class="empty-state-refresh-btn" type="button" (click)="refreshGallery()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="23 4 23 10 17 10"></polyline>
-                        <polyline points="1 20 1 14 7 14"></polyline>
-                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                    </svg>
-                    <span>Refresh</span>
-                </button>
+                <h2 class="empty-state-text">No Images Found</h2>
+                <p class="empty-state-subtext">Your photos are processing. This may take a few moments.</p>
+                <div class="empty-state-actions">
+                    <button class="btn-primary" type="button" (click)="refreshGallery()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                        <span>Refresh</span>
+                    </button>
+                    <button class="btn-secondary" type="button" (click)="retakeSelfie()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>Retake Selfie</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Grid Gallery View -->
-    <div *ngIf="!(loadingService.isLoading$ | async) && galleryImages.length > 0 && !isFullScreenView" class="grid-gallery" (click)="showSmartViewMenu = false; showSmartSelectMenu = false">
-        <!-- Modern Header -->
-        <div class="gallery-header" [class.selection-mode]="isSelectionMode">
+    <div *ngIf="!(loadingService.isLoading$ | async) && galleryImages.length > 0 && !isFullScreenView"
+         class="grid-gallery"
+         (click)="showSmartViewMenu = false; showSmartSelectMenu = false"
+         (touchstart)="onPullStart($event)"
+         (touchmove)="onPullMove($event)"
+         (touchend)="onPullEnd($event)">
 
-            <button class="header-btn cancel-btn" *ngIf="isSelectionMode" (click)="exitSelectionMode()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>Cancel
-            </button>
-            <div class="header-title" *ngIf="!isSelectionMode">
-                <h2>AlbumFlux</h2>
-                <span class="image-count">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
-            </div>
-            <!-- <button class="header-btn retake-header-btn" *ngIf="!isSelectionMode" (click)="retakeSelfie()" title="Retake Selfie">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                    <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-                <span>Retake</span>
-            </button> -->
-            <!-- <div class="header-title selection-title" *ngIf="isSelectionMode">
-                <span class="selection-count">{{ selectedImages.size }} {{ selectedImages.size === 1 ? 'item' : 'items' }} selected</span>
-                 <button class="header-btn select-all-btn" *ngIf="isSelectionMode" (click)="selectAll()">
-                <span>{{ selectedImages.size === galleryImages.length ? 'Deselect All' : 'Select All' }}</span>
-            </button>
-            </div> -->
-
+        <!-- Pull to Refresh Indicator -->
+        <div class="pull-refresh-indicator" [class.active]="isPulling" [class.refreshing]="isRefreshing">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            <span>Pull to refresh</span>
         </div>
 
-        <!-- Selection Toolbar (Top) -->
-        <div class="selection-toolbar-top" *ngIf="isSelectionMode && selectedImages.size > 0">
-            <div class="selection-info">
+        <!-- Sticky Header -->
+        <div class="gallery-header" [class.selection-mode]="isSelectionMode">
+            <div class="header-left">
+                <div class="header-logo" *ngIf="!isSelectionMode">
+                    <h2>AlbumFlux</h2>
+                </div>
+                <button class="header-btn cancel-btn" *ngIf="isSelectionMode" (click)="exitSelectionMode()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    <span>Cancel</span>
+                </button>
+            </div>
+
+            <div class="header-center" *ngIf="!isSelectionMode">
+                <span class="image-count">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
+            </div>
+
+            <div class="header-right">
+                <button class="header-btn logout-btn" (click)="logout()" *ngIf="!isSelectionMode" title="Logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Selection Mode Toolbar -->
+        <div class="selection-toolbar" *ngIf="isSelectionMode">
+            <div class="selection-badge">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="9 11 12 14 22 4"></polyline>
                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                 </svg>
-                <span>{{ selectedImages.size }} selected</span>
+                <span class="selection-count">{{ selectedImages.size }} selected</span>
             </div>
-            <div class="header-title selection-title" *ngIf="isSelectionMode">
-                 <button class="gallery-retake-btn" *ngIf="isSelectionMode" (click)="selectAll()">
-                <span>{{ selectedImages.size === galleryImages.length ? 'Deselect All' : 'Select All' }}</span>
+            <button class="select-all-btn" (click)="selectAll()">
+                <span>{{ selectedImages.size === galleryImages.length ? 'Clear All' : 'Select All' }}</span>
             </button>
-            </div>
         </div>
 
         <!-- Grid View -->
@@ -249,22 +233,24 @@
             </div>
         </div>
 
-        <!-- Retake Selfie Button (Always visible in gallery view) -->
-        <div class="gallery-retake-container" *ngIf="!isSelectionMode">
-            <button class="gallery-retake-btn" type="button" (click)="retakeSelfie()">
+        <!-- Bottom Action Bar -->
+        <div class="bottom-action-bar" [class.selection-mode]="isSelectionMode">
+            <button
+                class="action-btn retake-btn"
+                type="button"
+                (click)="retakeSelfie()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                     <circle cx="12" cy="13" r="4"></circle>
                 </svg>
-                <span>Retake Selfie</span>
+                <span>Retake</span>
             </button>
-        </div>
 
-        <!-- Bottom Action Bar (Selection Mode) -->
-        <div class="bottom-action-bar" >
-            <button class="action-btn share-btn" (click)="shareSelectedImages()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                [ariaDisabled]="isSelectionMode && selectedImages.size > 0">
+            <button
+                class="action-btn share-btn"
+                (click)="isSelectionMode ? shareSelectedImages() : shareAllImages()"
+                [disabled]="isSelectionMode && selectedImages.size === 0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="18" cy="5" r="3"></circle>
                     <circle cx="6" cy="12" r="3"></circle>
                     <circle cx="18" cy="19" r="3"></circle>
@@ -273,7 +259,11 @@
                 </svg>
                 <span>Share</span>
             </button>
-            <button class="action-btn download-btn" (click)="downloadSelectedImages()" [ariaDisabled]="isSelectionMode && selectedImages.size > 0">
+
+            <button
+                class="action-btn download-btn"
+                (click)="isSelectionMode ? downloadSelectedImages() : downloadImage()"
+                [disabled]="isSelectionMode && selectedImages.size === 0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
@@ -281,7 +271,6 @@
                 </svg>
                 <span>Download</span>
             </button>
-
         </div>
     </div>
 

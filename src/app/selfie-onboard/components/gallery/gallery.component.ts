@@ -43,6 +43,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
     isLongPressing: boolean = false;
     touchStartTime: number = 0;
     touchStartIndex: number = -1;
+    // Pull to refresh
+    pullStartY: number = 0;
+    pullCurrentY: number = 0;
+    isPulling: boolean = false;
+    isRefreshing: boolean = false;
+    pullThreshold: number = 80;
 
     constructor(
         private http: HttpClient,
@@ -288,12 +294,124 @@ export class GalleryComponent implements OnInit, OnDestroy {
     }
 
     downloadImage() {
-        const image = this.currentGalleryImage;
-        const link = document.createElement('a');
-        link.href = image?.url || image?.image_url || image;
-        link.download = `image_${this.currentImageIndex + 1}.jpg`;
-        link.click();
-        this.showToast('Image downloaded');
+        if (this.galleryImages.length === 0) {
+            this.showToast('No images to download');
+            return;
+        }
+        
+        // Download all images when not in selection mode
+        this.downloadAllImages();
+    }
+
+    async downloadAllImages() {
+        if (this.galleryImages.length === 0) {
+            this.showToast('No images to download');
+            return;
+        }
+
+        try {
+            this.loadingService.showLoading(`Downloading ${this.galleryImages.length} image(s)...`);
+
+            for (let i = 0; i < this.galleryImages.length; i++) {
+                const image = this.galleryImages[i];
+                const imageUrl = image?.url || image?.image_url || image;
+
+                if (imageUrl) {
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+                    const fileType = blob.type || 'image/jpeg';
+                    const fileName = `selfie_${i + 1}.${fileType.split('/')[1] || 'jpg'}`;
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(link.href);
+
+                    // Small delay between downloads
+                    if (i < this.galleryImages.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 200));
+                    }
+                }
+            }
+
+            this.showToast(`${this.galleryImages.length} image(s) downloaded successfully`);
+        } catch (error: any) {
+            console.error('Error downloading images:', error);
+            this.showToast('Failed to download images');
+        } finally {
+            this.loadingService.hideLoading();
+        }
+    }
+
+    async shareAllImages() {
+        if (this.galleryImages.length === 0) {
+            this.showToast('No images to share');
+            return;
+        }
+
+        if (!navigator.share) {
+            this.showToast('Sharing is not supported on this device');
+            return;
+        }
+
+        try {
+            this.loadingService.showLoading(`Preparing ${this.galleryImages.length} image(s) for sharing...`);
+
+            const files: File[] = [];
+
+            for (let i = 0; i < this.galleryImages.length; i++) {
+                const image = this.galleryImages[i];
+                const imageUrl = image?.url || image?.image_url || image;
+
+                if (imageUrl) {
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+                    const fileType = blob.type || 'image/jpeg';
+                    const fileName = `selfie_${i + 1}.${fileType.split('/')[1] || 'jpg'}`;
+                    const file = new File([blob], fileName, { type: fileType });
+                    files.push(file);
+                }
+
+                if (i < this.galleryImages.length - 1) {
+                    this.loadingService.showLoading(`Preparing images... (${i + 1}/${this.galleryImages.length})`);
+                    this.cdr.detectChanges();
+                }
+            }
+
+            if (files.length === 0) {
+                this.showToast('No valid images to share');
+                this.loadingService.hideLoading();
+                return;
+            }
+
+            if (navigator.canShare && navigator.canShare({ files: files })) {
+                await navigator.share({
+                    files: files,
+                    title: `${files.length} Selfie${files.length > 1 ? 's' : ''}`,
+                    text: `Check out these ${files.length} selfie${files.length > 1 ? 's' : ''}!`
+                });
+                this.showToast(`${files.length} image(s) shared successfully`);
+            } else if (navigator.canShare && navigator.canShare({ files: [files[0]] })) {
+                await navigator.share({
+                    files: [files[0]],
+                    title: `Selfie 1`,
+                    text: `Check out this selfie! (${files.length} total)`
+                });
+                this.showToast('First image shared (multiple file sharing not supported)');
+            } else {
+                this.showToast('Sharing is not available');
+            }
+        } catch (error: any) {
+            if (error.name !== 'AbortError') {
+                console.error('Error sharing images:', error);
+                this.showToast('Failed to share images');
+            }
+        } finally {
+            this.loadingService.hideLoading();
+        }
     }
 
     async downloadSelectedImages() {
@@ -763,6 +881,48 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     retakeSelfie() {
         this.router.navigate(['/event/selfie-onboarding/selfie']);
+    }
+
+    // Pull to refresh handlers
+    onPullStart(event: TouchEvent) {
+        if (this.galleryImages.length === 0 || this.isFullScreenView) return;
+        const scrollTop = (event.target as HTMLElement)?.scrollTop || 0;
+        if (scrollTop === 0) {
+            this.pullStartY = event.touches[0].clientY;
+            this.isPulling = false;
+        }
+    }
+
+    onPullMove(event: TouchEvent) {
+        if (this.galleryImages.length === 0 || this.isFullScreenView) return;
+        const scrollTop = (event.target as HTMLElement)?.scrollTop || 0;
+        if (scrollTop === 0 && this.pullStartY > 0) {
+            this.pullCurrentY = event.touches[0].clientY;
+            const pullDistance = this.pullCurrentY - this.pullStartY;
+            if (pullDistance > 0) {
+                this.isPulling = true;
+                event.preventDefault();
+            }
+        }
+    }
+
+    onPullEnd(event: TouchEvent) {
+        if (this.galleryImages.length === 0 || this.isFullScreenView) return;
+        if (this.isPulling) {
+            const pullDistance = this.pullCurrentY - this.pullStartY;
+            if (pullDistance > this.pullThreshold) {
+                this.isRefreshing = true;
+                this.refreshGallery();
+                setTimeout(() => {
+                    this.isRefreshing = false;
+                    this.isPulling = false;
+                }, 1000);
+            } else {
+                this.isPulling = false;
+            }
+        }
+        this.pullStartY = 0;
+        this.pullCurrentY = 0;
     }
 }
 
