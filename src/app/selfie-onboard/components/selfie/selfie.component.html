@@ -162,5 +162,93 @@
             </div>
         </div>
     </div>
+
+    <!-- Phone Number Modal -->
+    <div class="phone-modal-overlay" *ngIf="showPhoneModal" (click)="closePhoneModal()">
+        <div class="phone-modal-content" (click)="$event.stopPropagation()">
+            <!-- Drag Handle (visible on mobile) -->
+            <div class="phone-modal-drag-handle"></div>
+            <div class="phone-modal-header">
+                <h2 class="phone-modal-title">Update Phone Number</h2>
+                <button class="phone-modal-close" type="button" (click)="closePhoneModal()" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="phone-modal-body">
+                <p class="phone-modal-description">Please provide your phone number and password to continue.</p>
+                <div class="phone-modal-form">
+                    <div class="floating-input" [class.invalid]="phoneModalNumber && phoneModalNumber.trim() === ''">
+                        <input
+                            type="tel"
+                            id="phoneModalNumber"
+                            placeholder=" "
+                            [(ngModel)]="phoneModalNumber"
+                            maxlength="15"
+                            pattern="[0-9+\-\s()]*"
+                            [disabled]="isUpdatingPhone"
+                        />
+                        <label for="phoneModalNumber">Phone Number *</label>
+                    </div>
+                    <div class="floating-input password-input" [class.invalid]="phoneModalPassword && phoneModalPassword.trim() === ''">
+                        <input
+                            [type]="showPhonePassword ? 'text' : 'password'"
+                            id="phoneModalPassword"
+                            placeholder=" "
+                            [(ngModel)]="phoneModalPassword"
+                            [disabled]="isUpdatingPhone"
+                        />
+                        <label for="phoneModalPassword">Password *</label>
+                        <button 
+                            type="button" 
+                            class="password-toggle" 
+                            (click)="showPhonePassword = !showPhonePassword" 
+                            tabindex="-1"
+                            [disabled]="isUpdatingPhone"
+                        >
+                            <svg *ngIf="!showPhonePassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg *ngIf="showPhonePassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="phone-modal-footer">
+                <button
+                    class="btn-cancel"
+                    type="button"
+                    (click)="closePhoneModal()"
+                    [disabled]="isUpdatingPhone"
+                >
+                    Cancel
+                </button>
+                <button
+                    class="btn-update"
+                    type="button"
+                    (click)="updatePhoneNumber()"
+                    [disabled]="isUpdatingPhone || !phoneModalNumber || !phoneModalPassword"
+                    [class.loading]="isUpdatingPhone"
+                >
+                    <span class="btn-spinner" *ngIf="isUpdatingPhone">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="31.416" fill="none" opacity="0.3"/>
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="23.562" fill="none">
+                                <animate attributeName="stroke-dashoffset" dur="1s" values="31.416;0;31.416" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                    </span>
+                    <span *ngIf="!isUpdatingPhone">Update</span>
+                    <span *ngIf="isUpdatingPhone">Updating...</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 

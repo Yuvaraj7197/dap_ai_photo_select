@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { SelfieOnboardService } from '../../../services/selfie-onboard.service';
 import { NotificationService } from '../../../services/notification.service';
@@ -34,6 +35,13 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
     mobileNumber = '';
     private apiUrl = `${environment.baseURL}`;
     user_details: any;
+
+    // Phone number modal properties
+    showPhoneModal = false;
+    phoneModalNumber = '';
+    phoneModalPassword = '';
+    isUpdatingPhone = false;
+    showPhonePassword = false;
 
     constructor(
         private http: HttpClient,
@@ -354,7 +362,16 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
         this.startCamera();
     }
 
-    submit() {
+    async submit() {
+        const googlephnumber = localStorage.getItem('ai_google_phone');
+
+        // Validate null, "null", empty, undefined, or whitespace
+        // if (!googlephnumber || googlephnumber === 'null' || googlephnumber.trim() === '') {
+        //     this.showPhoneModal = true;
+        //     this.cdr.detectChanges();
+        //     return;
+        // }
+
         if (!this.previewImage) {
             this.notificationService.notify('warn', 'No Image', 'Please capture a selfie first');
             return;
@@ -406,6 +423,125 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.error('Submit error:', err);
             }
         });
+    }
+
+    async updatePhoneNumber() {
+        if (!this.phoneModalNumber || !this.phoneModalNumber.trim()) {
+            this.notificationService.notify('warn', 'Invalid Input', 'Please enter a valid phone number');
+            return;
+        }
+
+        if (!this.phoneModalPassword || !this.phoneModalPassword.trim()) {
+            this.notificationService.notify('warn', 'Invalid Input', 'Please enter your password');
+            return;
+        }
+
+        const user_id = localStorage.getItem('ai_user_id');
+        const accessToken = localStorage.getItem('ai_access');
+
+        if (!user_id || !accessToken) {
+            this.notificationService.notify('error', 'Session expired', 'Please login again');
+            this.showPhoneModal = false;
+            return;
+        }
+
+        this.isUpdatingPhone = true;
+        this.loadingService.showLoading('Updating phone number...');
+
+        const updateData = {
+            phone: this.phoneModalNumber.trim(),
+            password: this.phoneModalPassword.trim()
+        };
+
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+        });
+        headers = headers.set('X-Ai-Origin', 'https://aiphoto.albumflux.com');
+
+        try {
+            const response: any = await firstValueFrom(this.http.put(`${this.apiUrl}api/aiuser/update/${user_id}/`, updateData, { headers }));
+
+            // Update localStorage with new phone number
+            localStorage.setItem('ai_google_phone', this.phoneModalNumber.trim());
+            localStorage.setItem('ai_phone', this.phoneModalNumber.trim());
+
+            this.loadingService.hideLoading();
+            this.isUpdatingPhone = false;
+            this.showPhoneModal = false;
+            this.phoneModalNumber = '';
+            this.phoneModalPassword = '';
+
+            this.notificationService.notify('success', 'Phone Updated', 'Phone number updated successfully');
+
+            // Proceed with the upload after phone number is updated
+            await this.continueSubmit();
+        } catch (err: any) {
+            this.loadingService.hideLoading();
+            this.isUpdatingPhone = false;
+            this.notificationService.notify('error', 'Update Failed', err.error?.message || 'Failed to update phone number. Please try again.');
+            console.error('Update phone error:', err);
+        }
+    }
+
+    private async continueSubmit() {
+        if (!this.previewImage) {
+            this.notificationService.notify('warn', 'No Image', 'Please capture a selfie first');
+            return;
+        }
+
+        if (this.isSubmitting) {
+            return;
+        }
+
+        const user_id = localStorage.getItem('ai_user_id');
+        const accessToken = localStorage.getItem('ai_access');
+
+        if (!user_id) {
+            this.notificationService.notify('error', 'Session expired', 'Please login again');
+            return;
+        }
+
+        this.isSubmitting = true;
+        const imageBlob = this.dataURLtoBlob(this.previewImage);
+        const imageFile = new File([imageBlob], 'selfie.png', { type: 'image/png' });
+
+        const formData = new FormData();
+        formData.append('user_id', user_id);
+        formData.append('image', imageFile, 'selfie.png');
+
+        // Add mobile number if provided
+        if (this.mobileNumber && this.mobileNumber.trim()) {
+            formData.append('mobile_number', this.mobileNumber.trim());
+        }
+
+        let headers = new HttpHeaders({
+            Authorization: `Bearer ${accessToken}`
+        });
+        headers = headers.set('X-Ai-Origin', 'https://aiphoto.albumflux.com');
+
+        this.loadingService.showLoading('Uploading selfie...');
+        this.http.post(`${this.apiUrl}api/aiphoto/upload-selfie`, formData, { headers }).subscribe({
+            next: (response: any) => {
+                this.onboardService.setSubmissionData(response);
+                this.loadingService.hideLoading();
+                this.isSubmitting = false;
+                this.notificationService.notify('success', 'Submission complete', 'Registration completed successfully.');
+                this.router.navigate(['/event/selfie-onboarding/summary']);
+            },
+            error: (err) => {
+                this.loadingService.hideLoading();
+                this.isSubmitting = false;
+                this.notificationService.notify('error', 'Submission failed', err.error?.message || 'Please try again.');
+                console.error('Submit error:', err);
+            }
+        });
+    }
+
+    closePhoneModal() {
+        this.showPhoneModal = false;
+        this.phoneModalNumber = '';
+        this.phoneModalPassword = '';
     }
 
     showHelp() {
