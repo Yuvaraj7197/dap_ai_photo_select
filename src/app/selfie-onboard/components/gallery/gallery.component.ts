@@ -49,6 +49,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
     isPulling: boolean = false;
     isRefreshing: boolean = false;
     pullThreshold: number = 80;
+    // Image loading states
+    loadingImages: Set<number> = new Set();
+    loadedImages: Set<number> = new Set();
 
     constructor(
         private http: HttpClient,
@@ -73,6 +76,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
                 URL.revokeObjectURL(img.url);
             }
         });
+        // Clear loading states
+        this.loadingImages.clear();
+        this.loadedImages.clear();
     }
 
     @HostListener('document:keydown', ['$event'])
@@ -298,7 +304,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
             this.showToast('No images to download');
             return;
         }
-        
+
         // Download all images when not in selection mode
         this.downloadAllImages();
     }
@@ -617,6 +623,8 @@ export class GalleryComponent implements OnInit, OnDestroy {
         this.galleryImages = [];
         this.groupedImages = [];
         this.selectedImages.clear();
+        this.loadingImages.clear();
+        this.loadedImages.clear();
         this.getUserPhotos();
     }
 
@@ -624,58 +632,84 @@ export class GalleryComponent implements OnInit, OnDestroy {
         let processedCount = 0;
         let errorCount = 0;
         const totalImages = images.length;
+        const batchSize = 4; // Load 4 images at a time
 
         if (totalImages === 0) {
             this.loadingService.hideLoading();
             return;
         }
 
-        images.forEach((img: any, index: number) => {
-            const filename = this.extractFileName(img.file_url);
+        // Process images in batches of 4
+        const processBatch = (startIndex: number) => {
+            const endIndex = Math.min(startIndex + batchSize, totalImages);
+            let batchProcessed = 0;
 
-            this.albumService.getAIImageBlob(filename).subscribe({
-                next: (blob) => {
-                    const objectUrl = URL.createObjectURL(blob);
-                    this.galleryImages.push({
-                        url: objectUrl,
-                        date: new Date(img.created_at || Date.now())
-                    });
-                    processedCount++;
+            for (let i = startIndex; i < endIndex; i++) {
+                const img = images[i];
+                const filename = this.extractFileName(img.file_url);
 
-                    if (processedCount < totalImages) {
-                        this.loadingService.showLoading(`Loading images... (${processedCount}/${totalImages})`);
+                this.albumService.getAIImageBlob(filename).subscribe({
+                    next: (blob) => {
+                        const objectUrl = URL.createObjectURL(blob);
+                        const imageIndex = this.galleryImages.length;
+                        
+                        // Add placeholder to gallery first
+                        this.galleryImages.push({
+                            url: objectUrl,
+                            date: new Date(img.created_at || Date.now())
+                        });
+                        
+                        // Initialize loading state for this image (will be cleared when image loads)
+                        this.loadingImages.add(imageIndex);
                         this.cdr.detectChanges();
-                    } else {
-                        this.loadingService.hideLoading();
-                        this.groupImagesByDate();
+                        
+                        processedCount++;
+                        batchProcessed++;
 
-                        if (errorCount > 0) {
-                            this.notificationService.notify('warn', 'Partial Load', `${errorCount} image(s) failed to load. ${processedCount} image(s) loaded successfully.`);
+                        // Check if all images are processed
+                        if (processedCount >= totalImages) {
+                            this.loadingService.hideLoading();
+                            this.groupImagesByDate();
+
+                            if (errorCount > 0) {
+                                this.notificationService.notify('warn', 'Partial Load', `${errorCount} image(s) failed to load. ${processedCount - errorCount} image(s) loaded successfully.`);
+                            }
+                        } else if (batchProcessed >= (endIndex - startIndex)) {
+                            // Current batch is complete, process next batch
+                            setTimeout(() => {
+                                processBatch(endIndex);
+                            }, 100); // Small delay between batches
+                        }
+                    },
+                    error: (err: any) => {
+                        errorCount++;
+                        processedCount++;
+                        batchProcessed++;
+
+                        console.error(`Error loading image ${i + 1}:`, err);
+
+                        if (processedCount >= totalImages) {
+                            this.loadingService.hideLoading();
+                            this.groupImagesByDate();
+
+                            if (errorCount === totalImages) {
+                                this.notificationService.notify('error', 'Failed to Load Images', 'Unable to load any images. Please try refreshing the gallery.');
+                            } else if (errorCount > 0) {
+                                this.notificationService.notify('warn', 'Partial Load', `${errorCount} image(s) failed to load. ${processedCount - errorCount} image(s) loaded successfully.`);
+                            }
+                        } else if (batchProcessed >= (endIndex - startIndex)) {
+                            // Current batch is complete, process next batch
+                            setTimeout(() => {
+                                processBatch(endIndex);
+                            }, 100);
                         }
                     }
-                },
-                error: (err: any) => {
-                    errorCount++;
-                    processedCount++;
+                });
+            }
+        };
 
-                    console.error(`Error loading image ${index + 1}:`, err);
-
-                    if (processedCount >= totalImages) {
-                        this.loadingService.hideLoading();
-                        this.groupImagesByDate();
-
-                        if (errorCount === totalImages) {
-                            this.notificationService.notify('error', 'Failed to Load Images', 'Unable to load any images. Please try refreshing the gallery.');
-                        } else if (errorCount > 0) {
-                            this.notificationService.notify('warn', 'Partial Load', `${errorCount} image(s) failed to load. ${processedCount - errorCount} image(s) loaded successfully.`);
-                        }
-                    } else {
-                        this.loadingService.showLoading(`Loading images... (${processedCount}/${totalImages})`);
-                        this.cdr.detectChanges();
-                    }
-                }
-            });
-        });
+        // Start processing from index 0
+        processBatch(0);
     }
 
     extractFileName(path: string): string {
@@ -961,6 +995,32 @@ export class GalleryComponent implements OnInit, OnDestroy {
         }
         this.pullStartY = 0;
         this.pullCurrentY = 0;
+    }
+
+    // Image loading handlers
+    onImageLoadStart(index: number) {
+        // Only add to loading if not already loaded
+        if (!this.loadedImages.has(index)) {
+            this.loadingImages.add(index);
+            this.cdr.detectChanges();
+        }
+    }
+
+    onImageLoad(index: number) {
+        this.loadingImages.delete(index);
+        this.loadedImages.add(index);
+        this.cdr.detectChanges();
+    }
+
+    onImageError(index: number) {
+        this.loadingImages.delete(index);
+        // Still mark as "loaded" to hide skeleton even on error
+        this.loadedImages.add(index);
+        this.cdr.detectChanges();
+    }
+
+    isImageLoading(index: number): boolean {
+        return this.loadingImages.has(index) && !this.loadedImages.has(index);
     }
 }
 

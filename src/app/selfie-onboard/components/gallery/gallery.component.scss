@@ -138,6 +138,11 @@
   100% { transform: rotate(360deg); }
 }
 
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .loader-text {
   margin: 0;
   font-size: 1.1rem;
@@ -2078,8 +2083,46 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
         height: 100%;
         object-fit: cover;
         display: block;
-        transition: transform $gallery-transition-medium;
+        transition: transform $gallery-transition-medium, opacity 0.3s ease;
         will-change: transform;
+
+        &.image-hidden {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        &.image-loaded {
+            opacity: 1;
+            position: relative;
+        }
+    }
+
+    .image-loading-skeleton {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s ease-in-out infinite;
+        border-radius: $gallery-radius-md;
+        z-index: 1;
+
+        .skeleton-spinner {
+            width: 40px;
+            height: 40px;
+            color: rgba(0, 122, 255, 0.6);
+            animation: spin 1s linear infinite;
+        }
+    }
+
+    &.image-loading {
+        .image-wrapper {
+            background: #f5f5f5;
+        }
     }
 
     &.selected {
@@ -2280,6 +2323,12 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
             transform: scale(0.98);
         }
 
+        &.image-loading {
+            .timeline-content .image-wrapper {
+                background: #f5f5f5;
+            }
+        }
+
         &.selected {
             background: rgba(0, 122, 255, 0.1);
             border: 1px solid rgba(0, 122, 255, 0.3);
@@ -2315,12 +2364,46 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
                 border-radius: 10px;
                 overflow: hidden;
                 background: #f0f0f0;
+                position: relative;
+            }
+
+            .image-loading-skeleton {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                background-size: 200% 100%;
+                animation: skeleton-loading 1.5s ease-in-out infinite;
+                border-radius: 10px;
+                z-index: 1;
+
+                .skeleton-spinner {
+                    width: 30px;
+                    height: 30px;
+                    color: rgba(0, 122, 255, 0.6);
+                    animation: spin 1s linear infinite;
+                }
             }
 
             img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                transition: opacity 0.3s ease;
+
+                &.image-hidden {
+                    opacity: 0;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+
+                &.image-loaded {
+                    opacity: 1;
+                    position: relative;
+                }
             }
 
             .timeline-date {

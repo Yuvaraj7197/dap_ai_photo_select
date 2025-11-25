@@ -144,6 +144,7 @@
                 class="grid-item"
                 [class.selected]="isImageSelected(i)"
                 [class.selection-active]="isSelectionMode"
+                [class.image-loading]="isImageLoading(i)"
                 (click)="onImageClick(i, $event)"
                 (touchstart)="onImageTouchStart(i, $event)"
                 (touchend)="onImageTouchEnd(i, $event)"
@@ -152,7 +153,25 @@
                 (contextmenu)="$event.preventDefault()"
             >
                 <div class="image-wrapper">
-                    <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
+                    <!-- Loading Skeleton -->
+                    <div class="image-loading-skeleton" *ngIf="isImageLoading(i)">
+                        <div class="skeleton-spinner">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                                <path d="M12 2 A10 10 0 0 1 22 12" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <img 
+                        [src]="image?.url || image?.image_url || image" 
+                        [alt]="'Image ' + (i + 1)" 
+                        loading="lazy"
+                        [class.image-loaded]="loadedImages.has(i)"
+                        [class.image-hidden]="isImageLoading(i)"
+                        (loadstart)="onImageLoadStart(i)"
+                        (load)="onImageLoad(i)"
+                        (error)="onImageError(i)"
+                    />
                 </div>
                 <div class="image-overlay" *ngIf="!isSelectionMode">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -178,6 +197,7 @@
                     class="timeline-item"
                     [class.selected]="isImageSelected(i)"
                     [class.selection-active]="isSelectionMode"
+                    [class.image-loading]="isImageLoading(i)"
                     (click)="onImageClick(i, $event)"
                     (touchstart)="onImageTouchStart(i, $event)"
                     (touchend)="onImageTouchEnd(i, $event)"
@@ -186,7 +206,25 @@
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <div class="image-wrapper">
-                            <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
+                            <!-- Loading Skeleton -->
+                            <div class="image-loading-skeleton" *ngIf="isImageLoading(i)">
+                                <div class="skeleton-spinner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                                        <path d="M12 2 A10 10 0 0 1 22 12" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <img 
+                                [src]="image?.url || image?.image_url || image" 
+                                [alt]="'Image ' + (i + 1)" 
+                                loading="lazy"
+                                [class.image-loaded]="loadedImages.has(i)"
+                                [class.image-hidden]="isImageLoading(i)"
+                                (loadstart)="onImageLoadStart(i)"
+                                (load)="onImageLoad(i)"
+                                (error)="onImageError(i)"
+                            />
                         </div>
                         <div class="timeline-date">{{ getImageDate(image) }}</div>
                     </div>
@@ -214,12 +252,31 @@
                         class="grid-item"
                         [class.selected]="isImageSelected(image.originalIndex)"
                         [class.selection-active]="isSelectionMode"
+                        [class.image-loading]="isImageLoading(image.originalIndex)"
                         (click)="onImageClick(image.originalIndex, $event)"
                         (touchstart)="onImageTouchStart(image.originalIndex, $event)"
                         (touchend)="onImageTouchEnd(image.originalIndex, $event)"
                     >
                         <div class="image-wrapper">
-                            <img [src]="image?.url || image?.image_url || image" [alt]="'Image ' + (i + 1)" loading="lazy" />
+                            <!-- Loading Skeleton -->
+                            <div class="image-loading-skeleton" *ngIf="isImageLoading(image.originalIndex)">
+                                <div class="skeleton-spinner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                                        <path d="M12 2 A10 10 0 0 1 22 12" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <img 
+                                [src]="image?.url || image?.image_url || image" 
+                                [alt]="'Image ' + (i + 1)" 
+                                loading="lazy"
+                                [class.image-loaded]="loadedImages.has(image.originalIndex)"
+                                [class.image-hidden]="isImageLoading(image.originalIndex)"
+                                (loadstart)="onImageLoadStart(image.originalIndex)"
+                                (load)="onImageLoad(image.originalIndex)"
+                                (error)="onImageError(image.originalIndex)"
+                            />
                         </div>
                         <div class="selection-overlay" *ngIf="isSelectionMode">
                             <div class="selection-checkbox" [class.checked]="isImageSelected(image.originalIndex)">
