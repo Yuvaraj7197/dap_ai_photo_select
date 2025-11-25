@@ -54,15 +54,10 @@
                         class="preview-image"
                     />
 
-                    <!-- Face Alignment Guide -->
+                    <!-- Face Alignment Guide (Oval Shape) -->
                     <div *ngIf="!previewImage" class="face-guide" [ngClass]="{'aligned': isFaceAligned}">
-                        <div class="guide-ring"></div>
-                        <div class="guide-corners">
-                            <div class="corner top-left"></div>
-                            <div class="corner top-right"></div>
-                            <div class="corner bottom-left"></div>
-                            <div class="corner bottom-right"></div>
-                        </div>
+                        <div class="guide-oval"></div>
+                        <div class="guide-center-dot"></div>
                     </div>
 
                     <!-- Status Indicator -->
@@ -100,8 +95,8 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="action-section">
-            <!-- Capture/Retake Button -->
+        <div class="action-section" [class.captured]="previewImage">
+            <!-- Capture Button (shown only before capture) -->
             <button
                 *ngIf="!previewImage"
                 class="btn-capture"
@@ -120,50 +115,51 @@
                 <span class="btn-text">Capture</span>
             </button>
 
-            <button
-                *ngIf="previewImage"
-                class="btn-retake"
-                type="button"
-                (click)="retake()"
-                [disabled]="isSubmitting"
-            >
-                <span class="btn-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="23 4 23 10 17 10"/>
-                        <polyline points="1 20 1 14 7 14"/>
-                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                    </svg>
-                </span>
-                <span class="btn-text">Retake</span>
-            </button>
+            <!-- Post-Capture Buttons (shown after capture) -->
+            <div *ngIf="previewImage" class="post-capture-actions">
+                <button
+                    class="btn-retake"
+                    type="button"
+                    (click)="retake()"
+                    [disabled]="isSubmitting"
+                >
+                    <span class="btn-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <polyline points="1 20 1 14 7 14"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                    </span>
+                    <span class="btn-text">Retake</span>
+                </button>
 
-            <!-- Submit Button -->
-            <button
-                class="btn-submit"
-                type="button"
-                (click)="submit()"
-                [disabled]="!previewImage || isSubmitting"
-                [class.loading]="isSubmitting"
-            >
-                <span class="btn-ripple" *ngIf="!isSubmitting"></span>
-                <span class="btn-spinner" *ngIf="isSubmitting">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="31.416" fill="none" opacity="0.3"/>
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="23.562" fill="none">
-                            <animate attributeName="stroke-dashoffset" dur="1s" values="31.416;0;31.416" repeatCount="indefinite"/>
-                        </circle>
-                    </svg>
-                </span>
-                <span class="btn-icon" *ngIf="!isSubmitting">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                </span>
-                <span class="btn-text">
-                    <span *ngIf="!isSubmitting">Submit</span>
-                    <span *ngIf="isSubmitting">Submitting...</span>
-                </span>
-            </button>
+                <button
+                    class="btn-submit"
+                    type="button"
+                    (click)="submit()"
+                    [disabled]="isSubmitting"
+                    [class.loading]="isSubmitting"
+                >
+                    <span class="btn-ripple" *ngIf="!isSubmitting"></span>
+                    <span class="btn-spinner" *ngIf="isSubmitting">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="31.416" fill="none" opacity="0.3"/>
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="31.416" stroke-dashoffset="23.562" fill="none">
+                                <animate attributeName="stroke-dashoffset" dur="1s" values="31.416;0;31.416" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                    </span>
+                    <span class="btn-icon" *ngIf="!isSubmitting">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </span>
+                    <span class="btn-text">
+                        <span *ngIf="!isSubmitting">Submit</span>
+                        <span *ngIf="isSubmitting">Submitting...</span>
+                    </span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
