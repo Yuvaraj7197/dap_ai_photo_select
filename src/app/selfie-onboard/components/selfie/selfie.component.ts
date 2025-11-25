@@ -366,11 +366,11 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
         const googlephnumber = localStorage.getItem('ai_google_phone');
 
         // Validate null, "null", empty, undefined, or whitespace
-        // if (!googlephnumber || googlephnumber === 'null' || googlephnumber.trim() === '') {
-        //     this.showPhoneModal = true;
-        //     this.cdr.detectChanges();
-        //     return;
-        // }
+        if (!googlephnumber || googlephnumber === 'null' || googlephnumber.trim() === '') {
+            this.showPhoneModal = true;
+            this.cdr.detectChanges();
+            return;
+        }
 
         if (!this.previewImage) {
             this.notificationService.notify('warn', 'No Image', 'Please capture a selfie first');
