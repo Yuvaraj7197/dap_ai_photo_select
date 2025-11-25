@@ -140,6 +140,7 @@ export class SelfieOnboardService {
         localStorage.removeItem('ai_phone');
         localStorage.removeItem('ai_name');
         localStorage.removeItem('ai_email');
+        localStorage.removeItem('ai_google_phone')
     }
 
     clearAll() {

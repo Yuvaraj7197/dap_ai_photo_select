@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
         this.initializeForms();
         this.loadEventData();
+        localStorage.removeItem('ai_google_phone');
 
         // Check route to determine if we should show register mode
         this.updateRegisterMode('register');
