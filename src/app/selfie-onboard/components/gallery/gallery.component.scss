@@ -1905,30 +1905,30 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid $gallery-border-color;
-    padding: $gallery-spacing-md $gallery-spacing-lg;
-    padding-bottom: calc($gallery-spacing-md + env(safe-area-inset-bottom));
+    padding: 8px $gallery-spacing-lg 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    gap: $gallery-spacing-sm;
+    align-items: stretch;
+    gap: 6px;
     z-index: 1000;
     box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08);
     animation: slideUp $gallery-transition-medium;
 
     .action-btn {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: $gallery-spacing-sm;
+        gap: 4px;
         background: none;
         border: none;
-        padding: $gallery-spacing-md $gallery-spacing-xl;
+        padding: 8px 12px;
         border-radius: $gallery-radius-lg;
         cursor: pointer;
         transition: all $gallery-transition-fast;
-        font-size: 15px;
-        font-weight: 600;
         min-width: 0;
+        flex: 1;
 
         &:disabled {
             opacity: 0.4;
@@ -1940,6 +1940,7 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
             height: 20px;
             stroke: currentColor;
             stroke-width: 2.5;
+            flex-shrink: 0;
         }
 
         &:active:not(:disabled) {
@@ -1949,36 +1950,48 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
         &.retake-btn {
             color: $gallery-primary-color;
             background: rgba(0, 122, 255, 0.1);
-            flex: 1;
+
+            &:hover:not(:disabled) {
+                background: rgba(0, 122, 255, 0.15);
+            }
 
             &:active:not(:disabled) {
-                background: rgba(0, 122, 255, 0.15);
+                background: rgba(0, 122, 255, 0.2);
             }
         }
 
         &.share-btn {
             color: $gallery-primary-color;
             background: rgba(0, 122, 255, 0.1);
-            flex: 1;
+
+            &:hover:not(:disabled) {
+                background: rgba(0, 122, 255, 0.15);
+            }
 
             &:active:not(:disabled) {
-                background: rgba(0, 122, 255, 0.15);
+                background: rgba(0, 122, 255, 0.2);
             }
         }
 
         &.download-btn {
             color: $gallery-success-color;
             background: rgba(52, 199, 89, 0.1);
-            flex: 1;
+
+            &:hover:not(:disabled) {
+                background: rgba(52, 199, 89, 0.15);
+            }
 
             &:active:not(:disabled) {
-                background: rgba(52, 199, 89, 0.15);
+                background: rgba(52, 199, 89, 0.2);
             }
         }
 
         span {
+            font-size: 11px;
             font-weight: 600;
             letter-spacing: -0.2px;
+            line-height: 1.2;
+            white-space: nowrap;
         }
     }
 }
