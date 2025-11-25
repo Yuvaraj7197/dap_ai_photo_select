@@ -4,12 +4,10 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <button class="back-btn" type="button" (click)="backToLogin()" aria-label="Go back">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
+        <button  type="button"  aria-label="Go back">
+
         </button>
-        <h1 class="top-title">Take a Selfie</h1>
+        <h1 class="top-title">Scan. Selfie. See Your Moments.</h1>
         <button class="help-btn" type="button" (click)="showHelp()" aria-label="Help">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
@@ -20,20 +18,8 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Optional Mobile Number Input -->
-        <div class="mobile-input-section" *ngIf="showMobileInput">
-            <div class="floating-input">
-                <input
-                    type="tel"
-                    id="mobileNumber"
-                    placeholder=" "
-                    [(ngModel)]="mobileNumber"
-                    maxlength="15"
-                    pattern="[0-9+\-\s()]*"
-                />
-                <label for="mobileNumber">Mobile Number (Optional)</label>
-            </div>
-        </div>
+
+
 
         <!-- Camera Preview Area -->
         <div class="camera-section">
