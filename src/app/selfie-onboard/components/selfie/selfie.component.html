@@ -186,11 +186,11 @@
                             id="phoneModalNumber"
                             placeholder=" "
                             [(ngModel)]="phoneModalNumber"
-                            maxlength="15"
+                            maxlength="10"
                             pattern="[0-9+\-\s()]*"
                             [disabled]="isUpdatingPhone"
                         />
-                        <label for="phoneModalNumber">Phone Number *</label>
+                        <label for="phoneModalNumber">Phone Number <span class="text-danger">*</span></label>
                     </div>
                     <div class="floating-input password-input" [class.invalid]="phoneModalPassword && phoneModalPassword.trim() === ''">
                         <input
@@ -200,11 +200,11 @@
                             [(ngModel)]="phoneModalPassword"
                             [disabled]="isUpdatingPhone"
                         />
-                        <label for="phoneModalPassword">Password *</label>
-                        <button 
-                            type="button" 
-                            class="password-toggle" 
-                            (click)="showPhonePassword = !showPhonePassword" 
+                        <label for="phoneModalPassword">Password <span class="text-danger">*</span></label>
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            (click)="showPhonePassword = !showPhonePassword"
                             tabindex="-1"
                             [disabled]="isUpdatingPhone"
                         >
