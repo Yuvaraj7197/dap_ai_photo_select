@@ -1243,6 +1243,35 @@
   }
 }
 
+// Countdown Number
+.countdown-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  z-index: 50;
+  pointer-events: none;
+  animation: countdownScale 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes countdownScale {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
 // Status Indicator (No Background - Text and Icon Only)
 .status-indicator {
   position: absolute;
@@ -1742,6 +1771,10 @@
     width: 70px;
     height: 84px;
   }
+
+  .countdown-number {
+    font-size: 6rem;
+  }
 }
 
 @media (max-width: 360px) {
@@ -1797,6 +1830,10 @@
     .post-capture-actions {
       gap: 0.65rem;
     }
+  }
+
+  .countdown-number {
+    font-size: 5rem;
   }
 }
 

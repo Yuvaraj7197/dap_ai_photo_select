@@ -41,13 +41,13 @@
                     />
 
                     <!-- Face Alignment Guide (Oval Shape) -->
-                    <div *ngIf="!previewImage" class="face-guide" [ngClass]="{'aligned': isFaceAligned}">
+                    <div *ngIf="!previewImage && !isCountdownActive" class="face-guide" [ngClass]="{'aligned': isFaceAligned}">
                         <div class="guide-oval"></div>
                         <div class="guide-center-dot"></div>
                     </div>
 
                     <!-- Status Indicator -->
-                    <div *ngIf="!previewImage" class="status-indicator" [ngClass]="{'success': isFaceAligned}">
+                    <div *ngIf="!previewImage && !isCountdownActive" class="status-indicator" [ngClass]="{'success': isFaceAligned}">
                         <div class="status-icon-wrapper">
                             <svg *ngIf="isFaceAligned" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                                 <polyline points="20 6 9 17 4 12"/>
@@ -63,6 +63,9 @@
                             <span *ngIf="!isFaceAligned">Center your face in the frame</span>
                         </span>
                     </div>
+
+                    <!-- Countdown Number -->
+                    <div *ngIf="isCountdownActive" class="countdown-number">{{ countdownValue }}</div>
                 </div>
 
                 <!-- Hidden Canvas for Capture -->
@@ -88,7 +91,7 @@
                 class="btn-capture"
                 type="button"
                 (click)="capture()"
-                [disabled]="!videoReady || isSubmitting"
+                [disabled]="!videoReady || isSubmitting || isCountdownActive"
                 [class.loading]="isSubmitting"
             >
                 <span class="btn-ripple" *ngIf="!isSubmitting"></span>

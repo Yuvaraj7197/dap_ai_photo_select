@@ -43,6 +43,11 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
     isUpdatingPhone = false;
     showPhonePassword = false;
 
+    // Countdown properties
+    isCountdownActive = false;
+    countdownValue = 0;
+    countdownInterval: any = null;
+
     constructor(
         private http: HttpClient,
         private router: Router,
@@ -71,6 +76,7 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnDestroy(): void {
         this.stopCamera();
         if (this.detectionInterval) clearInterval(this.detectionInterval);
+        this.stopCountdown();
     }
 
     async loadFaceApi() {
@@ -327,7 +333,50 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 350);
     }
 
-    capture() {
+    startCountdown() {
+        if (this.isCountdownActive || !this.videoReady || this.isSubmitting) {
+            return;
+        }
+
+        // Pause face detection during countdown
+        if (this.detectionInterval) {
+            clearInterval(this.detectionInterval);
+            this.detectionInterval = null;
+        }
+
+        this.isCountdownActive = true;
+        this.countdownValue = 3;
+        this.cdr.detectChanges();
+
+        this.countdownInterval = setInterval(() => {
+            this.countdownValue--;
+
+            if (this.countdownValue <= 0) {
+                this.stopCountdown();
+                this.performCapture();
+            } else {
+                this.cdr.detectChanges();
+            }
+        }, 1000);
+    }
+
+    stopCountdown() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+            this.countdownInterval = null;
+        }
+        this.isCountdownActive = false;
+        this.countdownValue = 0;
+        
+        // Resume face detection if camera is still active
+        if (this.videoReady && this.faceApiLoaded && !this.previewImage) {
+            this.startFaceDetection();
+        }
+        
+        this.cdr.detectChanges();
+    }
+
+    performCapture() {
         const video = this.videoElement.nativeElement;
         const canvas = this.canvasElement.nativeElement;
         const ctx = canvas.getContext('2d');
@@ -356,7 +405,13 @@ export class SelfieComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cdr.detectChanges();
     }
 
+    capture() {
+        // Start countdown instead of immediate capture
+        this.startCountdown();
+    }
+
     retake() {
+        this.stopCountdown();
         this.previewImage = null;
         this.onboardService.setPreviewImage(null);
         this.startCamera();
