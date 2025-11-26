@@ -1,30 +1,33 @@
 <div class="selfie-onboard-container">
     <app-loading-overlay></app-loading-overlay>
     <app-notification-stack></app-notification-stack>
-    
+
     <!-- REGISTER SCREEN -->
     <form *ngIf="!isRegisterMode" [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="form-card register-screen">
         <div class="logo-container">
             <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
             <div class="logo-taglines">
                 <span class="tagline-item">
-                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
                     </svg>
-                    Preserve
+                    Scan
                 </span>
                 <span class="tagline-item">
-                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
                     </svg>
-                    Connect
+                    Selfie
                 </span>
                 <span class="tagline-item">
-                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
                     </svg>
-                    Inspire
+                    See Your Moments
                 </span>
             </div>
         </div>
@@ -32,7 +35,7 @@
             <h1 class="welcome-title">Welcome to</h1>
             <p class="form-subtitle" *ngIf="eventData.eventName || eventData.location">{{ eventData.eventName || '—' }}, {{ eventData.location || '—' }}</p>
             <h2 class="form-title">Register</h2>
-            
+
             <div class="floating-input" [class.invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
                 <input formControlName="name" placeholder=" " autocomplete="name" />
                 <label>Full name *</label>
@@ -109,23 +112,26 @@
             <img src="assets/logo/logo.png" alt="AlbumFlux Logo" class="logo-img" />
             <div class="logo-taglines">
                 <span class="tagline-item">
-                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
                     </svg>
-                    Preserve
+                    Scan
                 </span>
                 <span class="tagline-item">
-                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
                     </svg>
-                    Connect
+                    Selfie
                 </span>
                 <span class="tagline-item">
-                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    <svg class="tagline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
                     </svg>
-                    Inspire
+                    See Your Moments
                 </span>
             </div>
         </div>
