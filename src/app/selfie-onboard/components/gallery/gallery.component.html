@@ -108,6 +108,21 @@
                 </button>
             </div>
 
+
+            <div class="header-center" *ngIf="isSelectionMode">
+                 <span class="image-count">{{ selectedImages.size }} selected</span>
+
+            </div>
+
+            <div class="header-right"  *ngIf="isSelectionMode">
+                   <button class="select-all-btn" (click)="selectAll()">
+                <span>{{ selectedImages.size === galleryImages.length ? 'Clear All' : 'Select All' }}</span>
+            </button>
+            </div>
+
+
+
+
             <div class="header-center" *ngIf="!isSelectionMode">
                 <span class="image-count">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
             </div>
@@ -123,19 +138,7 @@
             </div>
         </div>
 
-        <!-- Selection Mode Toolbar -->
-        <div class="selection-toolbar" *ngIf="isSelectionMode">
-            <div class="selection-badge">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 11 12 14 22 4"></polyline>
-                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                </svg>
-                <span class="selection-count">{{ selectedImages.size }} selected</span>
-            </div>
-            <button class="select-all-btn" (click)="selectAll()">
-                <span>{{ selectedImages.size === galleryImages.length ? 'Clear All' : 'Select All' }}</span>
-            </button>
-        </div>
+
 
         <!-- Grid View -->
         <div *ngIf="viewMode === 'grid'" class="image-grid" [class.selection-mode]="isSelectionMode">
@@ -162,9 +165,9 @@
                             </svg>
                         </div>
                     </div>
-                    <img 
-                        [src]="image?.url || image?.image_url || image" 
-                        [alt]="'Image ' + (i + 1)" 
+                    <img
+                        [src]="image?.url || image?.image_url || image"
+                        [alt]="'Image ' + (i + 1)"
                         loading="lazy"
                         [class.image-loaded]="loadedImages.has(i)"
                         [class.image-hidden]="isImageLoading(i)"
@@ -215,9 +218,9 @@
                                     </svg>
                                 </div>
                             </div>
-                            <img 
-                                [src]="image?.url || image?.image_url || image" 
-                                [alt]="'Image ' + (i + 1)" 
+                            <img
+                                [src]="image?.url || image?.image_url || image"
+                                [alt]="'Image ' + (i + 1)"
                                 loading="lazy"
                                 [class.image-loaded]="loadedImages.has(i)"
                                 [class.image-hidden]="isImageLoading(i)"
@@ -267,9 +270,9 @@
                                     </svg>
                                 </div>
                             </div>
-                            <img 
-                                [src]="image?.url || image?.image_url || image" 
-                                [alt]="'Image ' + (i + 1)" 
+                            <img
+                                [src]="image?.url || image?.image_url || image"
+                                [alt]="'Image ' + (i + 1)"
                                 loading="lazy"
                                 [class.image-loaded]="loadedImages.has(image.originalIndex)"
                                 [class.image-hidden]="isImageLoading(image.originalIndex)"
