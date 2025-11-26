@@ -1681,7 +1681,7 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
     align-items: center;
     justify-content: space-between;
     padding: $gallery-spacing-md $gallery-spacing-lg;
-    background: $gallery-bg-light;
+    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid $gallery-border-color;
@@ -1730,6 +1730,10 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
         font-weight: 500;
     }
 
+    .image-count .custom-background {
+        color:#FFF !important;
+    }
+
     .header-btn {
         background: none;
         border: none;
@@ -1762,6 +1766,8 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
         }
 
         &.logout-btn {
+            margin-top: 8px;
+            background: #fff;
             padding: 4px;
             border-radius: 8px;
             color: $gallery-danger-color;
@@ -2841,6 +2847,28 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
             }
         }
     }
+}
+
+.logo-img {
+  display: block;
+  width: 100%;
+  max-width: 140px;
+  max-height: 50px;
+  height: auto;
+  object-fit: contain;
+  margin: 0 0 0.25rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.custom-color {
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.1);  /* faint background */
+  backdrop-filter: blur(4px);             /* glass effect */
 }
 
 
