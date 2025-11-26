@@ -109,22 +109,14 @@
             </div>
 
 
-            <div class="header-center" *ngIf="isSelectionMode">
-                 <span class="image-count">{{ selectedImages.size }} selected</span>
-
-            </div>
-
-            <div class="header-right"  *ngIf="isSelectionMode">
-                   <button class="select-all-btn" (click)="selectAll()">
-                <span>{{ selectedImages.size === galleryImages.length ? 'Clear All' : 'Select All' }}</span>
-            </button>
-            </div>
 
 
 
 
-            <div class="header-center" *ngIf="!isSelectionMode">
-                <span class="image-count">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
+
+            <div class="header-center" >
+                <span class="image-count" *ngIf="!isSelectionMode">{{ galleryImages.length }} photo{{ galleryImages.length !== 1 ? 's' : '' }}</span>
+                <span class="image-count" *ngIf="isSelectionMode">{{ selectedImages.size }} selected</span>
             </div>
 
             <div class="header-right">
@@ -134,6 +126,10 @@
                         <polyline points="16 17 21 12 16 7"></polyline>
                         <line x1="21" y1="12" x2="9" y2="12"></line>
                     </svg>
+                </button>
+
+                <button class="header-btn select-all-btn" (click)="selectAll()" *ngIf="isSelectionMode" title="Logout">
+                    <span>{{ selectedImages.size === galleryImages.length ? 'Clear All' : 'Select All' }}</span>
                 </button>
             </div>
         </div>
@@ -308,8 +304,7 @@
 
             <button
                 class="action-btn share-btn"
-                (click)="shareSelectedImages()"
-                [disabled]="selectedImages.size === 0">
+                (click)="handleShareClick()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="18" cy="5" r="3"></circle>
                     <circle cx="6" cy="12" r="3"></circle>
@@ -322,8 +317,7 @@
 
             <button
                 class="action-btn download-btn"
-                (click)="downloadSelectedImages()"
-                [disabled]="selectedImages.size === 0">
+                (click)="handleDownloadClick()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>

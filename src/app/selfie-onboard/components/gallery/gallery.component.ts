@@ -175,6 +175,21 @@ export class GalleryComponent implements OnInit, OnDestroy {
         }
     }
 
+    handleShareClick() {
+        if (this.selectedImages.size === 0) {
+            // Enable selection mode if no images are selected
+            if (!this.isSelectionMode) {
+                this.isSelectionMode = true;
+                this.showToast('Select images to share');
+            } else {
+                this.showToast('Please select at least one image to share');
+            }
+            return;
+        }
+        // If images are selected, proceed with sharing
+        this.shareSelectedImages();
+    }
+
     async shareSelectedImages() {
         if (this.selectedImages.size === 0) {
             this.showToast('No images selected');
@@ -456,6 +471,21 @@ export class GalleryComponent implements OnInit, OnDestroy {
         } finally {
             this.loadingService.hideLoading();
         }
+    }
+
+    handleDownloadClick() {
+        if (this.selectedImages.size === 0) {
+            // Enable selection mode if no images are selected
+            if (!this.isSelectionMode) {
+                this.isSelectionMode = true;
+                this.showToast('Select images to download');
+            } else {
+                this.showToast('Please select at least one image to download');
+            }
+            return;
+        }
+        // If images are selected, proceed with downloading
+        this.downloadSelectedImages();
     }
 
     async downloadSelectedImages() {
