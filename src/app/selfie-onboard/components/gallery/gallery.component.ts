@@ -202,7 +202,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
         }
 
         try {
-            this.loadingService.showLoading(`Preparing ${this.selectedImages.size} image(s) for sharing...`);
+            this.loadingService.showLoading(`Loading...`);
 
             const selectedIndices = Array.from(this.selectedImages).sort((a, b) => a - b);
             const files: File[] = [];
@@ -222,7 +222,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
                 }
 
                 if (i < selectedIndices.length - 1) {
-                    this.loadingService.showLoading(`Preparing images... (${i + 1}/${selectedIndices.length})`);
+                    this.loadingService.showLoading(`loading... (${i + 1}/${selectedIndices.length})`);
                     this.cdr.detectChanges();
                 }
             }
@@ -279,7 +279,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
         }
 
         try {
-            this.loadingService.showLoading('Preparing image for sharing...');
+            this.loadingService.showLoading('Loading...');
 
             const response = await fetch(imageUrl);
             const blob = await response.blob();
@@ -627,12 +627,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.loadingService.showLoading('Loading your photos...');
+        this.loadingService.showLoading('Loading...');
 
         this.http.get(`${this.apiUrl}api/aiphoto/user/image/match/${user_id}`,{headers}).subscribe({
             next: (res: any) => {
                 if (res.matches && res.matches.length > 0) {
-                    this.loadingService.showLoading('Processing images...');
+                    this.loadingService.showLoading('Loading...');
                     this.getbolbImage(res.matches);
                 } else {
                     this.loadingService.hideLoading();
@@ -682,17 +682,17 @@ export class GalleryComponent implements OnInit, OnDestroy {
                     next: (blob) => {
                         const objectUrl = URL.createObjectURL(blob);
                         const imageIndex = this.galleryImages.length;
-                        
+
                         // Add placeholder to gallery first
                         this.galleryImages.push({
                             url: objectUrl,
                             date: new Date(img.created_at || Date.now())
                         });
-                        
+
                         // Initialize loading state for this image (will be cleared when image loads)
                         this.loadingImages.add(imageIndex);
                         this.cdr.detectChanges();
-                        
+
                         processedCount++;
                         batchProcessed++;
 
