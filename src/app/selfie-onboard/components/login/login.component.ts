@@ -244,7 +244,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                 localStorage.setItem('ai_email', res.email);
                 this.loadingService.hideLoading();
                 this.notificationService.notify('success', 'Account ready', 'Registration successful! OTP sent to your email.');
-                this.router.navigate(['/event/selfie-onboarding/otp']);
+                this.router.navigate(['/event/selfie-onboarding/selfie']);
             },
             error: (err) => {
                 this.loadingService.hideLoading();
