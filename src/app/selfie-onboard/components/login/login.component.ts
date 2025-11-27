@@ -194,7 +194,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                  localStorage.setItem('ai_user_id', res.user_id.toString());
                 localStorage.setItem('ai_access', res.access);
                 localStorage.setItem('ai_refresh', res.refresh);
-                localStorage.setItem('ai_phone', res.phone);
+                localStorage.setItem('ai_google_phone', res.phone);
                 localStorage.setItem('ai_name', res.full_name);
                 localStorage.setItem('ai_email', res.email);
 
@@ -239,7 +239,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                  localStorage.setItem('ai_user_id', res.user_id.toString());
                 localStorage.setItem('ai_access', res.access);
                 localStorage.setItem('ai_refresh', res.refresh);
-                localStorage.setItem('ai_phone', res.phone);
+                localStorage.setItem('ai_google_phone', res.phone);
                 localStorage.setItem('ai_name', res.full_name);
                 localStorage.setItem('ai_email', res.email);
                 this.loadingService.hideLoading();
