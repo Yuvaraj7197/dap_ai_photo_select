@@ -2024,7 +2024,6 @@ $gallery-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
     cursor: pointer;
     position: relative;
     aspect-ratio: 1;
-    overflow: hidden;
     border-radius: $gallery-radius-md;
     background: $gallery-bg-light;
     transition: all $gallery-transition-medium;
