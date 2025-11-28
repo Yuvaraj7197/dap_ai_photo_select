@@ -16,13 +16,15 @@
   min-height: 100vh;
   max-height: 100vh;
   height: 100vh;
-  background: #0a0e27;
+  background:#FFF;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  padding-top: 100px;
+  padding-bottom: 60px;
 
   &::before,
   &::after {
@@ -225,7 +227,7 @@
 .form-card {
   width: 100%;
   max-width: 420px;
-  max-height: calc(100vh - 2rem);
+  max-height: calc(100vh - 180px);
   border-radius: 16px;
   background: white;
   border: none;
@@ -236,19 +238,39 @@
   flex-direction: column;
   overflow: hidden;
   animation: fadeInUp 0.35s ease both;
-  margin: 1rem;
   padding: 0;
 
-  &.condensed {
-    // Same styling for login form
-  }
 
   @media (max-width: 480px) {
     max-width: calc(100% - 1rem);
-    margin: 0.5rem;
     border-radius: 12px;
-    max-height: calc(100vh - 1rem);
+    max-height: calc(100vh - 160px);
   }
+}
+
+@media (max-width: 480px) {
+  .selfie-onboard-container {
+    padding-top: 90px;
+    padding-bottom: 55px;
+  }
+}
+
+// ======================
+// FIXED HEADER
+// ======================
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  width: 100%;
+  background: #fff;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+
 }
 
 .logo-container {
@@ -257,10 +279,8 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-height: 100px;
-  padding: 0.75rem 1rem 0.5rem;
   background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
-  border-radius: 16px 16px 0 0;
+  border-radius: 2px;
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
@@ -277,7 +297,7 @@
   }
 
   @media (max-width: 480px) {
-    border-radius: 12px 12px 0 0;
+    border-radius: 2px;
     padding: 0.6rem 0.875rem 0.4rem;
   }
 }
@@ -982,11 +1002,24 @@
   }
 }
 
+
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  width: 100%;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .marketing-footer {
-  margin: 0.5rem 0 0.5rem 0;
-  padding-top: 0.5rem 0 0.5rem 0;
-  border-top: 1px solid rgba(226, 232, 240, 0.3);
+  padding: 0.5rem 0;
   text-align: center;
+  max-width: 420px;
+  margin: 0 auto;
 }
 
 .marketing-footer-text {
@@ -1282,6 +1315,11 @@
 }
 
 @media (max-width: 400px) {
+  .selfie-onboard-container {
+    padding-top: 90px;
+    padding-bottom: 55px;
+  }
+
   .logo-container {
     max-height: 80px;
     padding: 0.4rem 0.5rem;
@@ -1373,6 +1411,8 @@
   .selfie-onboard-container {
     height: 100vh;
     max-height: 640px;
+    padding-top: 90px;
+    padding-bottom: 50px;
   }
 
   .card-container {
