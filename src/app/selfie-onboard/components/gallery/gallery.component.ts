@@ -343,7 +343,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
             const response = await fetch(imageUrl);
             const blob = await response.blob();
             const fileType = blob.type || 'image/jpeg';
-            const fileName = `selfie_${this.currentImageIndex + 1}.${fileType.split('/')[1] || 'jpg'}`;
+            const fileName = `Snapmatch-AI-selfie-${this.currentImageIndex + 1}.${fileType.split('/')[1] || 'jpg'}`;
 
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
